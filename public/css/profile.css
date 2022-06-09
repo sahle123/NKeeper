@@ -1,0 +1,17 @@
+
+section {
+  border-bottom: 1px solid black;
+}
+
+.image-carousel {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-around;
+  padding: 1rem;
+  overflow: hidden;
+}
+
+.profile-content {
+  padding: 2rem;
+  background-color: #eee;
+}
