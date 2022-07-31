@@ -1,19 +1,82 @@
 <%- include('../includes/head.ejs') %>
-<link rel="stylesheet" href="/css/profile.css">
-</head>
+  <link rel="stylesheet" href="/css/profile.css">
+  </head>
 
-<body>
-  <%- include('../includes/navigation.ejs') %>
-    <main>
-      <section class="image-carousel">
-        <img src="https://cdn.vox-cdn.com/thumbor/PjZOLcFllU-dkuD2XdaKpeY33U8=/0x0:2000x1334/920x613/filters:focal(744x446:1064x766):format(webp)/cdn.vox-cdn.com/uploads/chorus_image/image/55825803/hey_arnold_main.0.jpg" alt="DUMMY IMAGE">
-        <img src="https://www.nme.com/wp-content/uploads/2017/10/Hey-Arnold-movie-696x442.png" alt="DUMMY IMAGE">
-        <img src="https://static0.thethingsimages.com/wordpress/wp-content/uploads/2021/04/Hey-arnold-cast.jpg?q=50&fit=contain&w=960&h=500&dpr=1.5" alt="DUMMY IMAGE">
-      </section>
+  <body>
+    <%- include('../includes/navigation.ejs') %>
+      <main>
+        <section class="title-panel">
+          <p class="title-panel__name">
+            <%= prop.firstName %>
+              <%= prop.middleName %>
+                <%= prop.lastName %>
+          </p>
+          <p class="title-panel__last-activity">Last activity: <%= lastActivity %></p>
+        </section>
 
-      <section class="profile-content">
-        <h1>TEST CONTENT</h1>
-      </section>
-    </main>
+        <section class="image-carousel">
+          <img
+            src="https://cdn.vox-cdn.com/thumbor/PjZOLcFllU-dkuD2XdaKpeY33U8=/0x0:2000x1334/920x613/filters:focal(744x446:1064x766):format(webp)/cdn.vox-cdn.com/uploads/chorus_image/image/55825803/hey_arnold_main.0.jpg"
+            alt="DUMMY IMAGE">
+          <img src="https://www.nme.com/wp-content/uploads/2017/10/Hey-Arnold-movie-696x442.png" alt="DUMMY IMAGE">
+          <img
+            src="https://static0.thethingsimages.com/wordpress/wp-content/uploads/2021/04/Hey-arnold-cast.jpg?q=50&fit=contain&w=960&h=500&dpr=1.5"
+            alt="DUMMY IMAGE">
+        </section>
 
-    <%- include('../includes/end.ejs') %>
+        <section class="profile-content">
+          <div class="card-panels">
+            <div class="card flex-container">
+              <h4 class="card__title">Contant information</h4>
+              <p class="card__item">Email: <%= prop.contactInfo.email %>
+              </p>
+              <p class="card__item">Phone: <%= prop.contactInfo.mobile %>
+              </p>
+              <p class="card__item">WhatsApp: <%= prop.contactInfo.whatsApp %>
+              </p>
+            </div>
+            <div class="card flex-container">
+              <h4 class="card__title">CARD 2 - WIP</h4>
+              <p class="card__item">Other user details</p>
+            </div>
+          </div>
+
+          <div class="body-panel">
+            <div class="summary">
+              <%= prop.summary %>
+            </div>
+
+            <div class="activities">
+              <div class="activities__header">
+                <h3>Activities</h3>
+                <button id="btn-add-activity" class="btn">Add activity</button>
+              </div>
+
+              <div class="activities__new-activity">
+                <div class="flex-container--nowrap">
+                  <p class="date">
+                    <input type="text" placeholder="Add date" autocomplete="off" id="new-activity-date">
+                    <!-- Add datetime stuff here... -->
+                  </p>
+                  <textarea class="new-activity" placeholder="Add activity details" id="new-activity-desc"></textarea>
+                </div>
+                <div class="confirmation-buttons">
+                  <button class="btn">Submit</button>
+                  <button class="btn">Cancel</button>
+                </div>
+              </div>
+
+              <div class="activities__list">
+                <% for (let activity of prop.activities) { %>
+                  <div class="activities__list--subcontent">
+                    <p class="date"><%= activity.date.toLocaleDateString('en-US', {year: 'numeric', month: 'long', day: 'numeric' }) %></p>
+                    <p><%= activity.desc %></p>
+                  </div>
+                <% } %>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <%- include('../includes/end.ejs') %>

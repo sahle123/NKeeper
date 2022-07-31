@@ -3,15 +3,136 @@ section {
   border-bottom: 1px solid black;
 }
 
+.title-panel {
+  padding: 1rem;
+  background-color: #eee;
+}
+
+.title-panel__name {
+  font-size: 2.175rem;
+  color: black;
+}
+
+.title-panel__last-activity {
+  font-size: 0.8rem;
+  color: black;
+}
+
 .image-carousel {
   display: flex;
-  flex-flow: row nowrap;
+  flex-flow: wrap;
   justify-content: space-around;
   padding: 1rem;
-  overflow: hidden;
+  overflow: auto;
+  height: 26rem;
+}
+
+.image-carousel > img {
+  max-height: 25rem;
 }
 
 .profile-content {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: nowrap;
   padding: 2rem;
   background-color: #eee;
+}
+
+.card-panels {
+  display: inline-block;
+  width: 25%;
+  vertical-align: top;
+}
+
+.card {
+  background-color: lightgray;
+  border-radius: 10px;
+  margin-bottom: 2rem;
+  padding: 0 1rem 0.5rem 1rem;
+}
+
+.card__title {
+  padding-bottom: 1rem;
+  padding-top: 0.5rem;
+}
+
+.card__item {
+  padding: 0 1rem 0.5rem 1rem;
+  color: #888;
+}
+
+.body-panel {
+  display: inline-block;
+  width: auto;
+  max-width: 68%;
+  
+}
+
+.summary {
+  font-weight: lighter;
+	font-size: 0.8rem;
+	width: 100%;
+	text-align: left;
+	line-height: 1.5;
+	color: rgb(130, 130, 130);
+  margin-bottom: 2rem;
+}
+
+.activities {
+  background-color: white;
+  border-radius: 10px;
+
+}
+
+.activities__header {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  padding: 0.5rem;
+  border-bottom: 1px solid #eee;
+}
+
+.activities__header > h3 {
+  padding: 0;
+}
+
+.activities__new-activity {
+  padding: 1rem;
+  border-bottom: 1px solid #eee;
+}
+
+textarea.new-activity {
+  resize: none;
+  height: 6rem;
+  width: 99%;
+}
+
+.confirmation-buttons {
+  margin-top: 1rem;
+  text-align: right;
+}
+
+
+
+.date {
+  font-weight: lighter;
+  width: 15rem;
+}
+
+.date > input {
+  width: 70%;
+  cursor: pointer
+}
+
+.activities__list {
+  width: 100%;
+}
+
+.activities__list--subcontent {
+  display: flex;
+  flex-wrap: nowrap;
+  align-content: space-between;
+  border-bottom: 1px solid #eee;
+  padding: 1rem;
 }
