@@ -6,11 +6,14 @@
     <%- include('../includes/navigation.ejs') %>
       <main>
         <section class="title-panel">
-          <p class="title-panel__name">
-            <%= prop.firstName %>
+          <div class="flex-container--nowrap">
+            <p class="title-panel__name">
+              <%= prop.firstName %>
               <%= prop.middleName %>
-                <%= prop.lastName %>
-          </p>
+              <%= prop.lastName %>
+            </p>
+            <button class="btn" id="edit-page-button">Edit Profile</button>
+          </div>
           <p class="title-panel__last-activity">Last activity: <%= lastActivity %></p>
         </section>
 
@@ -42,7 +45,7 @@
           </div>
 
           <div class="body-panel">
-            <div class="summary">
+            <div class="summary" id="summary-section">
               <%= prop.summary %>
             </div>
 
@@ -68,7 +71,7 @@
 
               <div class="activities__list">
                 <% for (let activity of prop.activities) { %>
-                  <div class="activities__list--subcontent">
+                  <div class="activities__list--subcontent" id="<%= activity._id %>">
                     <p class="date"><%= activity.date.toLocaleDateString('en-US', {year: 'numeric', month: 'long', day: 'numeric' }) %></p>
                     <p><%= activity.desc %></p>
                   </div>
@@ -79,4 +82,5 @@
         </section>
       </main>
 
+      <script src="/js/profile.js" type="text/javascript"></script>
       <%- include('../includes/end.ejs') %>

@@ -5,7 +5,6 @@ const logger = require('../utils/logger');
 
 const Contact = require('../models/contact');
 
-
 exports.getProfile = (req, res, next) => {
   Contact
     .findOne()
@@ -13,6 +12,8 @@ exports.getProfile = (req, res, next) => {
 
       // Add dummy data if mongo contacts is empty.
       if (result.length <= 0) { add_temp_data_mongo(); }
+
+      //console.log(result.activities[0]._id);
 
       res.render('main/profile', {
         prop: result,
