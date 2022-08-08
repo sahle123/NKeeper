@@ -5,13 +5,14 @@ const logger = require('../utils/logger');
 
 const Contact = require('../models/contact');
 
+// Fetches profile
 exports.getProfile = (req, res, next) => {
   Contact
     .findOne()
     .then(result => {
 
-      // Add dummy data if mongo contacts is empty.
-      if (result.length <= 0) { add_temp_data_mongo(); }
+      // Edge case for when DB is empty.
+      if (!result) { add_temp_data_mongo(); }
 
       //console.log(result.activities[0]._id);
 
@@ -21,9 +22,22 @@ exports.getProfile = (req, res, next) => {
         pageTitle: 'User profile'
       });
     })
-    .catch(err => logger.logError(err));
+    .catch(err => {
+      const errorMsg = `Could not fetch any data. MongoDB may be empty. Try restarting. ${err}`;
+      const url = `/500?errorMsg=${errorMsg}`;
+
+      logger.logError(errorMsg);
+      res.redirect(url);
+    });
 };
 
+// Updates profile
+exports.updateProfile = (req, res, next) => {
+
+  console.log(req.body);
+  logger.plog("Called update profile!");
+
+};
 
 // Calculates the last activity with this contact.
 getLastActivityDate = (activities) => {
@@ -62,4 +76,5 @@ function add_temp_data_mongo() {
   });
 
   contact.save();
+  logger.plog("Added dummy (Hey Arnold!) user.");
 }

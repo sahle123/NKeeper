@@ -10,7 +10,7 @@ const app = express();
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 // CONSTS
-const PORT = 50822;
+const PORT = 3000;
 const corsPolicy = cors({
   origin: ['https://www.google.com/'],
   methods: ['GET']
@@ -32,6 +32,8 @@ const profileRoutes = require('./routes/profile');
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 // MIDDLEWARE
+
+app.use(express.json());
 
 app.use(express.urlencoded({ extended: true }));
 // Allows the serving of static files in a certain directory. This is only read 
