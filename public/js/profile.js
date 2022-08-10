@@ -6,44 +6,98 @@
 'use strict';
 
 (function () {
-  // Determines whether or not the state of the page is in EDIT MODE or VIEW MODE.
-  let EDIT_MODE = false;
+
+  // State of various elements within the page.
+  const STATE = {
+    editPage: false,
+    addActivity: false
+  };
 
   const GATEWAY = 'http://localhost:3000';
 
-  // Initialize listener for the EDIT_MODE state.
+  // Initialize listener and IDs for the page.
   const addEventListeners = () => {
 
     // All IDs on the profile page.
     const idList = {
-      editBtn: 'edit-page-button',
+      userId: 'userId',
+      firstName: 'first-name',
+      middleName: 'middle-name',
+      lastName: 'last-name',
       summary: 'summary-section',
       emailContent: 'email-content',
       phoneContent: 'phone-content',
-      whatsappContent: 'whatsapp-content'
+      whatsappContent: 'whatsapp-content',
+      newActivity: 'new-activity-section'
     };
 
-    const editBtn = document.getElementById(idList.editBtn);
-    editBtn.onclick = () => { toggleEditModeState(idList); }
+    const btnList = {
+      editBtn: 'edit-page-button',
+      addActivityBtn: 'btn-add-activity'
+    };
+
+    const editBtn = document.getElementById(btnList.editBtn);
+    editBtn.onclick = () => { toggleEditModeState(idList, btnList); }
+
+    const addActivityBtn = document.getElementById(btnList.addActivityBtn);
+    addActivityBtn.onclick = () => { toggleAddActivity(idList, btnList); }
   }
 
   // Toggles the state of the page to and from EDIT_MODE.
-  const toggleEditModeState = (idList) => {
-    EDIT_MODE = !EDIT_MODE;
-    const editBtn = document.getElementById(idList.editBtn);
+  const toggleEditModeState = (idList, btnList) => {
+    STATE.editPage = !STATE.editPage;
+    const editBtn = document.getElementById(btnList.editBtn);
     const summary = document.getElementById(idList.summary);
     const email = document.getElementById(idList.emailContent);
     const phone = document.getElementById(idList.phoneContent);
     const whatsapp = document.getElementById(idList.whatsappContent);
+    const firstName = document.getElementById(idList.firstName);
+    const middleName = document.getElementById(idList.middleName);
+    const lastName = document.getElementById(idList.lastName);
 
     // Editing
-    if (EDIT_MODE) {
+    if (STATE.editPage) {
 
+      //
       // Edit button
       editBtn.innerHTML = "Save Changes";
       editBtn.classList.remove("btn")
       editBtn.classList.add("btn--caution");
 
+      //
+      // Header section
+      const firstNameContent = firstName.innerHTML;
+      const middleNameContent = middleName.innerHTML;
+      const lastNameContent = lastName.innerHTML;
+
+      firstName.innerHTML = null;
+      const inputFirstName = document.createElement('input');
+      inputFirstName.setAttribute('id', 'first-name-input');
+      inputFirstName.setAttribute('name', 'first-name');
+      inputFirstName.setAttribute('type', 'text');
+      inputFirstName.setAttribute('placeholder', 'First name');
+      inputFirstName.value = firstNameContent;
+      firstName.appendChild(inputFirstName);
+
+      middleName.innerHTML = null;
+      const inputMiddleName = document.createElement('input');
+      inputMiddleName.setAttribute('id', 'middle-name-input');
+      inputMiddleName.setAttribute('name', 'middle-name');
+      inputMiddleName.setAttribute('type', 'text');
+      inputMiddleName.setAttribute('placeholder', 'Middle name');
+      inputMiddleName.value = middleNameContent;
+      middleName.appendChild(inputMiddleName);
+
+      lastName.innerHTML = null;
+      const inputLastName = document.createElement('input');
+      inputLastName.setAttribute('id', 'last-name-input');
+      inputLastName.setAttribute('name', 'last-name');
+      inputLastName.setAttribute('type', 'text');
+      inputLastName.setAttribute('placeholder', 'Last name');
+      inputLastName.value = lastNameContent;
+      lastName.appendChild(inputLastName);
+
+      //
       // Summary section
       const summaryContent = summary.innerHTML;
       summary.innerHTML = null;
@@ -53,6 +107,7 @@
       summary.appendChild(textareaSummary);
       textareaSummary.value = summaryContent;
 
+      //
       // Contact information
       const emailContent = email.innerHTML;
       const phoneContent = phone.innerHTML;
@@ -88,15 +143,27 @@
     // Reading
     else {
 
+      //
       // Edit button
       editBtn.innerHTML = "Edit Profile";
       editBtn.classList.remove("btn--caution")
       editBtn.classList.add("btn");
 
+      //
+      // Header section
+      const inputFirstName = document.getElementById('first-name-input');
+      firstName.innerHTML = inputFirstName.value;
+      const inputMiddleName = document.getElementById('middle-name-input');
+      middleName.innerHTML = inputMiddleName.value;
+      const inputLastName = document.getElementById('last-name-input');
+      lastName.innerHTML = inputLastName.value;
+
+      //
       // Summary section
       const textareaSummary = document.getElementById('summary-textarea');
       summary.innerHTML = textareaSummary.value;
 
+      //
       // Contact information
       const inputEmail = document.getElementById('email-input');
       email.innerHTML = inputEmail.value;
@@ -115,16 +182,24 @@
 
   // Posts all changes to MongoDB.
   const postChanges = async (idList) => {
+    const userId = document.getElementById(idList.userId);
+    const firstName = document.getElementById(idList.firstName);
+    const middleName = document.getElementById(idList.middleName);
+    const lastName = document.getElementById(idList.lastName);
     const summary = document.getElementById(idList.summary);
     const email = document.getElementById(idList.emailContent);
     const phone = document.getElementById(idList.phoneContent);
     const whatsapp = document.getElementById(idList.whatsappContent);
 
     const rawBody = {
-      summary: summary.innerHTML,
-      email: email.innerHTML,
-      phone: phone.innerHTML,
-      whatsapp: whatsapp.innerHTML
+      userId: userId.value,
+      firstName: firstName.innerHTML.trim(),
+      middleName: middleName.innerHTML.trim(),
+      lastName: lastName.innerHTML.trim(),
+      summary: summary.innerHTML.trim(),
+      email: email.innerHTML.trim(),
+      phone: phone.innerHTML.trim(),
+      whatsapp: whatsapp.innerHTML.trim()
     };
 
     const request = {
@@ -138,8 +213,33 @@
     };
 
     const response = await fetch(`${GATEWAY}/main/profile`, request);
+  }
 
-    console.log("response: " + response);
+  // Toggles the state of the 'Add Activity' button.
+  const toggleAddActivity = (idList, btnList) => {
+    STATE.addActivity = !STATE.addActivity;
+
+    const addActivityAnchor = document.getElementById(idList.newActivity);
+    const activityHtml = `
+    <div class="flex-container--nowrap">
+      <p class="date">
+        <input type="text" placeholder="Add date" autocomplete="off" id="new-activity-date">
+      </p>
+      <textarea class="new-activity" placeholder="Add activity details" id="new-activity-desc"></textarea>
+    </div>
+    <div class="confirmation-buttons">
+      <button class="btn" id="btn-submit-activity">Submit</button>
+      <button class="btn" id="btn-cancel-activity">Cancel</button>
+    </div>`;
+
+    if(STATE.addActivity) {
+      addActivityAnchor.innerHTML = activityHtml;
+      addActivityAnchor.classList.remove('hide');
+    }
+    else {
+      addActivityAnchor.innerHTML = null;
+      addActivityAnchor.classList.add('hide');
+    }
   }
 
   //

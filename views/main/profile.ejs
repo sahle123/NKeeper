@@ -7,10 +7,11 @@
   <main>
     <section class="title-panel">
       <div class="flex-container--nowrap">
-        <p class="title-panel__name">
-          <%= prop.firstName %>
-          <%= prop.middleName %>
-          <%= prop.lastName %>
+        <input type="hidden" value="<%= prop._id%>" id="userId">
+        <p>
+          <span class="title-panel__name" id="first-name"><%= prop.firstName %> </span>
+          <span class="title-panel__name" id="middle-name"><%= prop.middleName %> </span>
+          <span class="title-panel__name" id="last-name"><%= prop.lastName %> </span>
         </p>
         <button class="btn" id="edit-page-button">Edit Profile</button>
       </div>
@@ -44,8 +45,12 @@
           </span>
         </div>
         <div class="card flex-container">
-          <h4 class="card__title">CARD 2 - WIP</h4>
-          <p class="card__item">Other user details</p>
+          <h4 class="card__title">Attributes</h4>
+          <p class="card__item">Date of birth</p>
+          <p class="card__item">Age</p>
+          <p class="card__item">Nationality</p>
+          <p class="card__item">Living in</p>
+
         </div>
       </div>
 
@@ -60,18 +65,7 @@
             <button id="btn-add-activity" class="btn">Add activity</button>
           </div>
 
-          <div class="activities__new-activity">
-            <div class="flex-container--nowrap">
-              <p class="date">
-                <input type="text" placeholder="Add date" autocomplete="off" id="new-activity-date">
-                <!-- Add datetime stuff here... -->
-              </p>
-              <textarea class="new-activity" placeholder="Add activity details" id="new-activity-desc"></textarea>
-            </div>
-            <div class="confirmation-buttons">
-              <button class="btn">Submit</button>
-              <button class="btn">Cancel</button>
-            </div>
+          <div class="activities__new-activity hide" id="new-activity-section">
           </div>
 
           <div class="activities__list">

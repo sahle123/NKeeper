@@ -2,6 +2,7 @@
 * Controller for anything related to profile services.
 */
 const logger = require('../utils/logger');
+const errHelper = require('../utils/errorHelper');
 
 const Contact = require('../models/contact');
 
@@ -22,21 +23,30 @@ exports.getProfile = (req, res, next) => {
         pageTitle: 'User profile'
       });
     })
-    .catch(err => {
-      const errorMsg = `Could not fetch any data. MongoDB may be empty. Try restarting. ${err}`;
-      const url = `/500?errorMsg=${errorMsg}`;
-
-      logger.logError(errorMsg);
-      res.redirect(url);
-    });
+    .catch(err => { errHelper.redirect500(res, err); });
 };
 
 // Updates profile
+// DEV-NOTE: Needs text sanitizers
 exports.updateProfile = (req, res, next) => {
 
-  console.log(req.body);
-  logger.plog("Called update profile!");
+  Contact
+    .findById(req.body.userId)
+    .then(contact => {
+      contact.firstName = req.body.firstName;
+      contact.middleName = req.body.middleName;
+      contact.lastName = req.body.lastName;
+      //contact.dob
+      contact.summary = req.body.summary;
+      contact.contactInfo.mobile = req.body.phone;
+      contact.contactInfo.email = req.body.email;
+      contact.contactInfo.whatsApp = req.body.whatsapp;
+      contact.save();
+    })
+    .then(result => { res.redirect("/main/profile"); })
+    .catch(err => { errHelper.redirect500(res, err); });
 
+    logger.plog("Called update profile!");
 };
 
 // Calculates the last activity with this contact.

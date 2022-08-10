@@ -2,11 +2,9 @@
 
 const B = require('../utils/basic');
 
+
 exports.get400 = (req, res, next) => {
-  let msg = 'Unknown';
-  if (!B.isEmpty(req.query.errorMsg)) {
-    msg = req.query.errorMsg;
-  }
+  const msg = getErrorMessage(req.query.errorMsg);
 
   res
     .status(400)
@@ -17,19 +15,18 @@ exports.get400 = (req, res, next) => {
 };
 
 exports.get404 = (req, res, next) => {
+  const msg = getErrorMessage(req.query.errorMsg, 'Page not found');
+
   res
     .status(404)
     .render('errors/errorPage', { 
       pageTitle: 'Page Not Found',
-      errorMessage: '404 page was not found!'
+      errorMessage: msg
     });
 };
 
 exports.get500 = (req, res, next) => {
-  let msg = 'Internal server error';
-  if (!B.isEmpty(req.query.errorMsg)) {
-    msg = req.query.errorMsg;
-  }
+  const msg = getErrorMessage(req.query.errorMsg, 'Internal server error');
 
   res
     .status(500)
@@ -38,3 +35,12 @@ exports.get500 = (req, res, next) => {
       errorMessage: msg
     });
 };
+
+// Private function for getting error messages
+// or returning a default.
+function getErrorMessage(errMsg, defaultMsg = 'Unknown') {
+  if(!B.isEmpty(errMsg))
+    return errMsg;
+  else
+    return defaultMsg;
+}

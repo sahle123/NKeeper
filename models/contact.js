@@ -24,6 +24,10 @@ const contactSchema = new Schema({
     email: { type: String, required: false },
     whatsApp: { type: String, required: false}
   },
+  attributes: {
+    nationality: { type: String, required: false },
+    country: { type: String, required: false }
+  },
   activities: [{
     desc: { type: String, required: false },
     date: { type: Date, required: false }
