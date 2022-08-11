@@ -6,7 +6,6 @@
 'use strict';
 
 (function () {
-
   // State of various elements within the page.
   const STATE = {
     editPage: false,
@@ -28,9 +27,12 @@
       emailContent: 'email-content',
       phoneContent: 'phone-content',
       whatsappContent: 'whatsapp-content',
-      newActivity: 'new-activity-section'
+      newActivitySection: 'new-activity-section',
+      newActivityDesc: 'new-activity-desc',
+      newActivityDate: 'new-activity-date'
     };
 
+    // All buttons on the page.
     const btnList = {
       editBtn: 'edit-page-button',
       addActivityBtn: 'btn-add-activity'
@@ -206,7 +208,7 @@
       method: 'POST',
       cache: 'no-cache',
       body: JSON.stringify(rawBody),
-      headers: { 
+      headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json'
       }
@@ -219,11 +221,12 @@
   const toggleAddActivity = (idList, btnList) => {
     STATE.addActivity = !STATE.addActivity;
 
-    const addActivityAnchor = document.getElementById(idList.newActivity);
+    let dateInstance = null;
+    const addActivityAnchor = document.getElementById(idList.newActivitySection);
     const activityHtml = `
     <div class="flex-container--nowrap">
       <p class="date">
-        <input type="text" placeholder="Add date" autocomplete="off" id="new-activity-date">
+        <input name="datePicker" type="text" placeholder="Add date" autocomplete="off" id="new-activity-date">
       </p>
       <textarea class="new-activity" placeholder="Add activity details" id="new-activity-desc"></textarea>
     </div>
@@ -232,13 +235,21 @@
       <button class="btn" id="btn-cancel-activity">Cancel</button>
     </div>`;
 
-    if(STATE.addActivity) {
+    if (STATE.addActivity) {
       addActivityAnchor.innerHTML = activityHtml;
       addActivityAnchor.classList.remove('hide');
+
+      dateInstance = new dtsel.DTS('input[name="datePicker"]', {
+        direction: 'BOTTOM',
+        showTime: false,
+        showDate: true,
+        dateFormat: "yyyy-mm-dd"
+      });
     }
     else {
       addActivityAnchor.innerHTML = null;
       addActivityAnchor.classList.add('hide');
+      dateInstance = null;
     }
   }
 
