@@ -9,7 +9,6 @@ const logger = require('../utils/logger');
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
 // Schema
@@ -22,22 +21,20 @@ const contactSchema = new Schema({
   contactInfo: {
     mobile: { type: String, required: false },
     email: { type: String, required: false },
-    whatsApp: { type: String, required: false}
+    whatsApp: { type: String, required: false }
   },
   attributes: {
     nationality: { type: String, required: false },
     country: { type: String, required: false }
   },
-  activities: [{
-    desc: { type: String, required: false },
-    date: { type: Date, required: false }
-  }]
+  activities: [{ type: Schema.Types.ObjectId, required: false }]
 });
+
 
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
 // Methods
-
 // ...
+
 
 module.exports = mongoose.model('Contact', contactSchema);

@@ -63,19 +63,21 @@
         <div class="activities">
           <div class="activities__header">
             <h3>Activities</h3>
-            <button id="btn-add-activity" class="btn">Add activity</button>
+            <button id="btn-toggle-activity" class="btn">Add activity</button>
           </div>
 
           <div class="activities__new-activity hide" id="new-activity-section">
           </div>
 
           <div class="activities__list">
-            <% for (let activity of prop.activities) { %>
-            <div class="activities__list--subcontent" id="<%= activity._id %>">
-              <p class="date">
-                <%= activity.date.toLocaleDateString('en-US', {year: 'numeric', month: 'long', day: 'numeric' }) %></p>
-              <p><%= activity.desc %></p>
-            </div>
+            <% if (prop.activities) { %>
+              <% for (let activity of prop.activities) { %>
+              <div class="activities__list--subcontent" id="<%= activity._id %>">
+                <p class="date">
+                  <%= activity.date.toLocaleDateString('en-US', {year: 'numeric', month: 'long', day: 'numeric' }) %></p>
+                <p><%= activity.desc %></p>
+              </div>
+              <% } %>
             <% } %>
           </div>
         </div>

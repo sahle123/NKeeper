@@ -1,7 +1,0 @@
-1. SEC - Add server-side text sanitizers
-2. QoL - Toast messages for user feedback.
-3. QoL - Icons instead of text for certain titles.
-4. Ftr - Add nationality + living in attributes to user.
-5. QoL - Sort activities by date (ASC or DESC).
-6. QoL - Pagination for activities when exceeding more than 10. (Configurable).
-7. QoL - Descriptive tooltips, especially for icons.

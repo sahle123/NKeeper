@@ -12,4 +12,7 @@ router.get('/profile', profileController.getProfile);
 // POST /profile/
 router.post('/profile', profileController.updateProfile);
 
+// POST /profile/add-activity/
+router.post('/profile/add-activity', profileController.addActivity);
+
 module.exports = router;

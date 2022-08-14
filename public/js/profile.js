@@ -35,14 +35,16 @@
     // All buttons on the page.
     const btnList = {
       editBtn: 'edit-page-button',
-      addActivityBtn: 'btn-add-activity'
+      toggleActivityBtn: 'btn-toggle-activity',
+      submitActivityBtn: 'btn-submit-activity',
+      cancelActivityBtn: 'btn-cancel-activity'
     };
 
     const editBtn = document.getElementById(btnList.editBtn);
     editBtn.onclick = () => { toggleEditModeState(idList, btnList); }
 
-    const addActivityBtn = document.getElementById(btnList.addActivityBtn);
-    addActivityBtn.onclick = () => { toggleAddActivity(idList, btnList); }
+    const toggleActivityBtn = document.getElementById(btnList.toggleActivityBtn);
+    toggleActivityBtn.onclick = () => { toggleAddActivity(idList, btnList); }
   }
 
   // Toggles the state of the page to and from EDIT_MODE.
@@ -204,15 +206,7 @@
       whatsapp: whatsapp.innerHTML.trim()
     };
 
-    const request = {
-      method: 'POST',
-      cache: 'no-cache',
-      body: JSON.stringify(rawBody),
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
-      }
-    };
+    const request = buildPostRequest(rawBody);
 
     const response = await fetch(`${GATEWAY}/main/profile`, request);
   }
@@ -221,7 +215,7 @@
   const toggleAddActivity = (idList, btnList) => {
     STATE.addActivity = !STATE.addActivity;
 
-    let dateInstance = null;
+    let dateInstance = null; // This non-read is intentional.
     const addActivityAnchor = document.getElementById(idList.newActivitySection);
     const activityHtml = `
     <div class="flex-container--nowrap">
@@ -239,12 +233,20 @@
       addActivityAnchor.innerHTML = activityHtml;
       addActivityAnchor.classList.remove('hide');
 
+      // Initialize datetime picker
       dateInstance = new dtsel.DTS('input[name="datePicker"]', {
         direction: 'BOTTOM',
         showTime: false,
         showDate: true,
         dateFormat: "yyyy-mm-dd"
       });
+
+      // Add click event
+      const postActivityBtn = document.getElementById(btnList.submitActivityBtn);
+      postActivityBtn.onclick = () => { postActivity(idList, btnList); }
+
+      const cancelBtn = document.getElementById(btnList.cancelActivityBtn);
+      cancelBtn.onclick = () => { toggleAddActivity(idList, btnList); }
     }
     else {
       addActivityAnchor.innerHTML = null;
@@ -253,7 +255,47 @@
     }
   }
 
-  //
+  // Posts new activity to MongoDB.
+  const postActivity = async (idList) => {
+    const userId = document.getElementById(idList.userId);
+    const activityDesc = document.getElementById(idList.newActivityDesc);
+    const activityDate = document.getElementById(idList.newActivityDate);
+
+    const rawBody = {
+      userId: userId.value,
+      desc: activityDesc.value,
+      date: activityDate.value
+    };
+
+    const request = buildPostRequest(rawBody);
+
+    const response = await fetch(`${GATEWAY}/main/profile/add-activity`, request);
+
+    if(response.status === 200)
+      location.reload();
+    else {
+      console.error("Something went wrong sending activity data...");
+      // DEV-NOTE: Toast message here for error.
+    }
+  }
+
+  // DRY code for building POST requests.
+  // DEV-NOTE: Maybe move into utility js file later...
+  function buildPostRequest(rawBody) {
+    if (!rawBody)
+      return null;
+
+    return {
+      method: 'POST',
+      cache: 'no-cache',
+      body: JSON.stringify(rawBody),
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      }
+    }
+  }
+
   // Main initialization
   function init() {
     addEventListeners();
