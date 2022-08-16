@@ -5,6 +5,8 @@
 */
 'use strict';
 
+import { Gateway, buildPostRequest } from './shared.js';
+
 (function () {
   // State of various elements within the page.
   const STATE = {
@@ -12,7 +14,7 @@
     addActivity: false
   };
 
-  const GATEWAY = 'http://localhost:3000';
+  const GATEWAY = Gateway;
 
   // Initialize listener and IDs for the page.
   const addEventListeners = () => {
@@ -209,6 +211,7 @@
     const request = buildPostRequest(rawBody);
 
     const response = await fetch(`${GATEWAY}/main/profile`, request);
+    // DEV-NOTE: Toast message based on response.
   }
 
   // Toggles the state of the 'Add Activity' button.
@@ -276,23 +279,6 @@
     else {
       console.error("Something went wrong sending activity data...");
       // DEV-NOTE: Toast message here for error.
-    }
-  }
-
-  // DRY code for building POST requests.
-  // DEV-NOTE: Maybe move into utility js file later...
-  function buildPostRequest(rawBody) {
-    if (!rawBody)
-      return null;
-
-    return {
-      method: 'POST',
-      cache: 'no-cache',
-      body: JSON.stringify(rawBody),
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
-      }
     }
   }
 

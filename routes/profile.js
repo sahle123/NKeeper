@@ -1,4 +1,4 @@
-const path = require('path');
+//const path = require('path');
 
 const express = require('express');
 
@@ -14,5 +14,8 @@ router.post('/profile', profileController.updateProfile);
 
 // POST /profile/add-activity/
 router.post('/profile/add-activity', profileController.addActivity);
+
+// POST /profile/delete-activity/
+router.post('/profile/delete-activity', profileController.deleteActivity);
 
 module.exports = router;

@@ -4,6 +4,8 @@
 </head>
 
 <body>
+  <noscript>JavaScript is required in order for this to work.</noscript>
+
   <%- include('../includes/navigation.ejs') %>
   <main>
     <section class="title-panel">
@@ -72,11 +74,18 @@
           <div class="activities__list">
             <% if (prop.activities) { %>
               <% for (let activity of prop.activities) { %>
-              <div class="activities__list--subcontent" id="<%= activity._id %>">
-                <p class="date">
-                  <%= activity.date.toLocaleDateString('en-US', {year: 'numeric', month: 'long', day: 'numeric' }) %></p>
-                <p><%= activity.desc %></p>
-              </div>
+                <div class="activities__list--subcontent" id="<%= activity._id %>">
+                  <p class="activities__list--subcontent--date">
+                    <%= activity.date.toLocaleDateString('en-US', {year: 'numeric', month: 'long', day: 'numeric' }) %></p>
+                  <p class="activities__list--subcontent--desc"><%= activity.desc %></p>
+                  <div class="activities__button--edit">
+                    <button class="btn--dropdown" onclick="_menus.toggleDropdownMenu('<%= activity._id %>-menu')">...</button>
+                    <div class="dropdown-menu" id="<%= activity._id %>-menu">
+                      <p class="dropdown-menu--item" >Edit</p>
+                      <p class="dropdown-menu--item" onclick="_menus.deleteActivity('<%= activity._id %>')">Delete</p>
+                    </div>
+                  </div>
+                </div>
               <% } %>
             <% } %>
           </div>
@@ -85,7 +94,9 @@
     </section>
   </main>
 
+  <script src="/js/shared.js" type="module"></script>
   <script src="/js/dtsel/dtsel.js" type="text/javascript"></script>
-  <script src="/js/profile.js" type="text/javascript"></script>
+  <script src="/js/menus.js" type="module"></script>
+  <script src="/js/profile.js" type="module"></script>
 
   <%- include('../includes/end.ejs') %>

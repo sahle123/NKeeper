@@ -80,6 +80,29 @@ exports.addActivity = async (req, res, next) => {
   catch (err) { errHelper.redirect500(res, err); }
 }
 
+// Deletes activity for some contact.
+exports.deleteActivity = async (req, res, next) => {
+  try {
+    const activityId = req.body.activityId;
+
+    const activityResult = await Activity.findById(activityId);
+    const userId = activityResult.userId.toString();
+
+    // Remove activity from Activities document.
+    await Activity.findByIdAndDelete(activityId);
+
+    // Remove activity ID from Contacts document.
+    await Contact.findByIdAndUpdate(userId, {
+      $pull: { activities: activityId }
+    });
+
+    logger.plog("Deleted activity " + activityId);
+
+    res.redirect('/main/profile');
+  }
+  catch (err) { errHelper.redirect500(res, err); }
+}
+
 // Calculates the last activity with this contact.
 getLastActivityDate = (contact) => {
   const msg = "- None - ";
