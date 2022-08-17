@@ -37,23 +37,30 @@
       <div class="card-panels">
         <div class="card flex-container">
           <h4 class="card__title">Contact Information</h4>
-          <span>Email:
+          <p class="card__subtitle">Email
             <p class="card__item" id="email-content"><%= prop.contactInfo.email %></p>
-          </span>
-          <span>Phone:
+          </p>
+          <p class="card__subtitle">Phone
             <p class="card__item" id="phone-content"><%= prop.contactInfo.mobile %></p>
-          </span>
-          <span>WhatsApp:
+          </p>
+          <p class="card__subtitle">WhatsApp
             <p class="card__item" id="whatsapp-content"><%= prop.contactInfo.whatsApp %></p>
-          </span>
+          </p>
         </div>
         <div class="card flex-container">
           <h4 class="card__title">Attributes</h4>
-          <p class="card__item">Date of birth</p>
-          <p class="card__item">Age</p>
-          <p class="card__item">Nationality</p>
-          <p class="card__item">Living in</p>
-
+          <p class="card__subtitle">Date of birth
+            <p class="card__item" id="dob-content"><%= prop.dob.toLocaleDateString('fr-CA', {year: 'numeric', month: 'numeric', day: 'numeric' }) %></p>
+          </p>
+          <p class="card__subtitle">Age
+            <p class="card__item"><%= age %></p>
+          </p>
+          <p class="card__subtitle">Nationality
+            <p class="card__item" id="nationality-content"><%= prop.contactInfo.nationality %></p>
+          </p>
+          <p class="card__subtitle">Living in
+            <p class="card__item" id="livingIn-content"><%= prop.contactInfo.livingIn %></p>
+          </p>
         </div>
       </div>
 
@@ -76,13 +83,14 @@
               <% for (let activity of prop.activities) { %>
                 <div class="activities__list--subcontent" id="<%= activity._id %>">
                   <p class="activities__list--subcontent--date">
-                    <%= activity.date.toLocaleDateString('en-US', {year: 'numeric', month: 'long', day: 'numeric' }) %></p>
+                    <%= activity.date.toLocaleDateString('en-US', {year: 'numeric', month: 'long', day: 'numeric' }) %>
+                  </p>
                   <p class="activities__list--subcontent--desc"><%= activity.desc %></p>
                   <div class="activities__button--edit">
                     <button class="btn--dropdown" onclick="_menus.toggleDropdownMenu('<%= activity._id %>-menu')">...</button>
                     <div class="dropdown-menu" id="<%= activity._id %>-menu">
-                      <p class="dropdown-menu--item" >Edit</p>
-                      <p class="dropdown-menu--item" onclick="_menus.deleteActivity('<%= activity._id %>')">Delete</p>
+                      <p class="dropdown-menu--item" onclick="_profileFns.editActivity('<%= activity._id %>')">Edit</p>
+                      <p class="dropdown-menu--item" onclick="_profileFns.deleteActivity('<%= activity._id %>')">Delete</p>
                     </div>
                   </div>
                 </div>

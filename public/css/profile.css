@@ -57,6 +57,10 @@ section {
   padding-top: 0.5rem;
 }
 
+.card__subtitle {
+  color: inherit;
+}
+
 .card__item {
   padding: 0 1rem 0.5rem 1rem;
   color: #888;
@@ -82,7 +86,6 @@ section {
 .activities {
   background-color: white;
   border-radius: 10px;
-
 }
 
 .activities__header {

@@ -16,6 +16,11 @@ import { Gateway, buildPostRequest } from './shared.js';
 
   const GATEWAY = Gateway;
 
+  // CSS selectors used in this JS file for element selection.
+  const _classSelectors = {
+    activitiesEditDesc: '.activities__list--subcontent--desc'
+  }
+
   // Initialize listener and IDs for the page.
   const addEventListeners = () => {
 
@@ -29,6 +34,9 @@ import { Gateway, buildPostRequest } from './shared.js';
       emailContent: 'email-content',
       phoneContent: 'phone-content',
       whatsappContent: 'whatsapp-content',
+      dobContent: 'dob-content',
+      nationalityContent: 'nationality-content',
+      livingInContent: 'livingIn-content',
       newActivitySection: 'new-activity-section',
       newActivityDesc: 'new-activity-desc',
       newActivityDate: 'new-activity-date'
@@ -57,6 +65,9 @@ import { Gateway, buildPostRequest } from './shared.js';
     const email = document.getElementById(idList.emailContent);
     const phone = document.getElementById(idList.phoneContent);
     const whatsapp = document.getElementById(idList.whatsappContent);
+    const dob = document.getElementById(idList.dobContent);
+    const nationality = document.getElementById(idList.nationalityContent);
+    const livingIn = document.getElementById(idList.livingInContent);
     const firstName = document.getElementById(idList.firstName);
     const middleName = document.getElementById(idList.middleName);
     const lastName = document.getElementById(idList.lastName);
@@ -115,10 +126,8 @@ import { Gateway, buildPostRequest } from './shared.js';
 
       //
       // Contact information
-      const emailContent = email.innerHTML;
-      const phoneContent = phone.innerHTML;
-      const whatsappContent = whatsapp.innerHTML;
 
+      const emailContent = email.innerHTML;
       const inputEmail = document.createElement('input');
       email.innerHTML = null;
       inputEmail.setAttribute('id', 'email-input');
@@ -127,6 +136,7 @@ import { Gateway, buildPostRequest } from './shared.js';
       inputEmail.value = emailContent;
       email.appendChild(inputEmail);
 
+      const phoneContent = phone.innerHTML;
       const inputPhone = document.createElement('input');
       phone.innerHTML = null;
       inputPhone.setAttribute('id', 'phone-input');
@@ -135,6 +145,7 @@ import { Gateway, buildPostRequest } from './shared.js';
       inputPhone.value = phoneContent;
       phone.appendChild(inputPhone);
 
+      const whatsappContent = whatsapp.innerHTML;
       const inputWhatsapp = document.createElement('input');
       whatsapp.innerHTML = null;
       inputWhatsapp.setAttribute('id', 'whatsapp-input');
@@ -142,6 +153,34 @@ import { Gateway, buildPostRequest } from './shared.js';
       inputWhatsapp.setAttribute('type', 'text');
       inputWhatsapp.value = whatsappContent;
       whatsapp.appendChild(inputWhatsapp);
+
+      const dobContent = dob.innerHTML;
+      const inputDob = document.createElement('input');
+      dob.innerHTML = null;
+      inputDob.setAttribute('id', 'dob-input');
+      inputDob.setAttribute('name', 'dob');
+      inputDob.setAttribute('type', 'text');
+      inputDob.setAttribute('placeholder', 'yyyy-MM-dd');
+      inputDob.value = dobContent;
+      dob.appendChild(inputDob);
+
+      const nationalityContent = nationality.innerHTML;
+      const inputNationality = document.createElement('input');
+      nationality.innerHTML = null;
+      inputNationality.setAttribute('id', 'nationality-input');
+      inputNationality.setAttribute('name', 'nationality');
+      inputNationality.setAttribute('type', 'text');
+      inputNationality.value = nationalityContent;
+      nationality.appendChild(inputNationality);
+
+      const livingInContent = livingIn.innerHTML;
+      const inputLivingIn = document.createElement('input');
+      livingIn.innerHTML = null;
+      inputLivingIn.setAttribute('id', 'livingIn-input');
+      inputLivingIn.setAttribute('name', 'livingIn');
+      inputLivingIn.setAttribute('type', 'text');
+      inputLivingIn.value = livingInContent;
+      livingIn.appendChild(inputLivingIn);
 
       //
       // ...add more as needed
@@ -173,11 +212,21 @@ import { Gateway, buildPostRequest } from './shared.js';
       // Contact information
       const inputEmail = document.getElementById('email-input');
       email.innerHTML = inputEmail.value;
+
       const inputPhone = document.getElementById('phone-input');
       phone.innerHTML = inputPhone.value;
+
       const inputWhatsapp = document.getElementById('whatsapp-input');
       whatsapp.innerHTML = inputWhatsapp.value;
 
+      const inputDob = document.getElementById('dob-input');
+      dob.innerHTML = inputDob.value;
+
+      const inputNationality = document.getElementById('nationality-input');
+      nationality.innerHTML = inputNationality.value;
+
+      const inputLivingIn = document.getElementById('livingIn-input');
+      livingIn.innerHTML = inputLivingIn.value;
 
       //
       // ...add more as needed
@@ -196,6 +245,9 @@ import { Gateway, buildPostRequest } from './shared.js';
     const email = document.getElementById(idList.emailContent);
     const phone = document.getElementById(idList.phoneContent);
     const whatsapp = document.getElementById(idList.whatsappContent);
+    const dob = document.getElementById(idList.dobContent);
+    const nationality = document.getElementById(idList.nationalityContent);
+    const livingIn = document.getElementById(idList.livingInContent);
 
     const rawBody = {
       userId: userId.value,
@@ -205,13 +257,19 @@ import { Gateway, buildPostRequest } from './shared.js';
       summary: summary.innerHTML.trim(),
       email: email.innerHTML.trim(),
       phone: phone.innerHTML.trim(),
-      whatsapp: whatsapp.innerHTML.trim()
+      whatsapp: whatsapp.innerHTML.trim(),
+      dob: dob.innerHTML.trim(),
+      nationality: nationality.innerHTML.trim(),
+      livingIn: livingIn.innerHTML.trim()
     };
 
     const request = buildPostRequest(rawBody);
 
     const response = await fetch(`${GATEWAY}/main/profile`, request);
     // DEV-NOTE: Toast message based on response.
+
+    // Refresh page.
+    location.reload();
   }
 
   // Toggles the state of the 'Add Activity' button.
@@ -274,12 +332,51 @@ import { Gateway, buildPostRequest } from './shared.js';
 
     const response = await fetch(`${GATEWAY}/main/profile/add-activity`, request);
 
-    if(response.status === 200)
+    if (response.status === 200)
       location.reload();
     else {
       console.error("Something went wrong sending activity data...");
       // DEV-NOTE: Toast message here for error.
     }
+  }
+
+  // Sends request to server to delete the selected activity. 
+  const deleteActivity = async (activityId) => {
+
+    const rawBody = {
+      activityId: activityId
+    };
+
+    const request = buildPostRequest(rawBody);
+
+    const response = await fetch(`${GATEWAY}/main/profile/delete-activity`, request);
+
+    // DEV-NOTE: Toast message based on response.
+
+    // Remove element from browser.
+    document.getElementById(activityId).remove();
+  }
+
+  // Updates an activity in for a given Contact.
+  const editActivity = async (activityId) => {
+
+    const activity = document.getElementById(activityId);
+
+    // Hide activity description
+    const descEl = activity.querySelector(_classSelectors.activitiesEditDesc);
+    descEl.classList.add('hide');
+
+    // Show edit activity markup.
+    // DEV-NOTE: Try adding a node from the parent object. Assign it an ID so it can be tracked.
+
+    // const editActivityHtml = `<textarea class="new-activity" placeholder="Edit activtiy details" id="${activityId}-desc">${descEl.innerHTML}</textarea>`;
+    // const editActivityAnchor = document.getElementById(`${activityId}-anchor`);
+
+    // editActivityAnchor.innerHTML = editActivityHtml;
+  }
+
+  const cancelEditActivity = async (activityId) => {
+
   }
 
   // Main initialization
@@ -288,5 +385,8 @@ import { Gateway, buildPostRequest } from './shared.js';
   }
 
   init();
+
+  // For any functions I need directly accessible to the DOM.
+  window._profileFns = { deleteActivity, editActivity };
 })();
 

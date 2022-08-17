@@ -25,6 +25,7 @@ exports.getProfile = (req, res, next) => {
       res.render('main/profile', {
         prop: result,
         lastActivity: getLastActivityDate(result),
+        age: getAge(result.dob),
         pageTitle: 'User profile'
       });
     })
@@ -41,11 +42,13 @@ exports.updateProfile = (req, res, next) => {
       contact.firstName = req.body.firstName;
       contact.middleName = req.body.middleName;
       contact.lastName = req.body.lastName;
-      //contact.dob
+      contact.dob = req.body.dob;
       contact.summary = req.body.summary;
       contact.contactInfo.mobile = req.body.phone;
       contact.contactInfo.email = req.body.email;
       contact.contactInfo.whatsApp = req.body.whatsapp;
+      contact.contactInfo.nationality = req.body.nationality;
+      contact.contactInfo.livingIn = req.body.livingIn;
       contact.save();
     })
     .then(result => { res.redirect("/main/profile"); })
@@ -103,8 +106,13 @@ exports.deleteActivity = async (req, res, next) => {
   catch (err) { errHelper.redirect500(res, err); }
 }
 
+
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+// Support functions
+
 // Calculates the last activity with this contact.
-getLastActivityDate = (contact) => {
+const getLastActivityDate = (contact) => {
   const msg = "- None - ";
 
   if (!contact.activities)
@@ -118,7 +126,24 @@ getLastActivityDate = (contact) => {
   );
 
   return new Date(result)
-    .toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+    .toLocaleDateString('fr-CA', { year: 'numeric', month: 'numeric', day: 'numeric' });
+}
+
+// Calculates age based on passed in date string.
+// Kudos: https://stackoverflow.com/a/7091965/6369752
+const getAge = (dateString) => {
+  const today = new Date();
+  const birthDate = new Date(dateString);
+  let age = today.getFullYear() - birthDate.getFullYear();
+
+  // Checking if the month in the year has passed or not.
+  // Don't want to add a year prematurely.
+  const m = today.getMonth() - birthDate.getMonth();
+  if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+    age--;
+  }
+  
+  return age;
 }
 
 // Sorts arrays of dates DESC
@@ -146,7 +171,9 @@ function add_temp_data_mongo() {
     contactInfo: {
       mobile: '+966 53 384 4827',
       whatsApp: '+966 53 384 4827',
-      email: 'arnold.shortman@some-mail.com'
+      email: 'arnold.shortman@some-mail.com',
+      nationality: 'American',
+      livingIn: 'New York City, USA'
     }
   });
 

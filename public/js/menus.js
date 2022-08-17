@@ -60,6 +60,7 @@ window.onclick = function (event) {
 
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
+// POST requests
 // Sends request to server to delete the selected activity. 
 const deleteActivity = async (activityId) => {
 
@@ -75,6 +76,15 @@ const deleteActivity = async (activityId) => {
 
   // Remove element from browser.
   document.getElementById(activityId).remove();
+}
+
+// Updates an activity in for a given Contact.
+const editActivity = async (activityId, desc) => {
+
+  const rawBody = { 
+    activityId: activityId,
+    desc: desc
+  };
 }
 
 // ----------------------------------------------------------------------------

@@ -21,7 +21,9 @@ const contactSchema = new Schema({
   contactInfo: {
     mobile: { type: String, required: false },
     email: { type: String, required: false },
-    whatsApp: { type: String, required: false }
+    whatsApp: { type: String, required: false },
+    nationality: { type: String, required: false },
+    livingIn: { type: String, required: false }
   },
   attributes: {
     nationality: { type: String, required: false },
