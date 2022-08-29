@@ -94,6 +94,17 @@
                     </div>
                   </div>
                 </div>
+                <!-- Edit activity section -->
+                <div class="hide" id="<%= activity._id %>-edit-section">
+                  <p class="activities__list--subcontent--date">
+                    <%= activity.date.toLocaleDateString('en-US', {year: 'numeric', month: 'long', day: 'numeric' }) %>
+                  </p>
+                  <p class="activities__list--subcontent--desc" id="<%= activity._id %>-edit-desc"></p>
+                  <div class="flex-container">
+                    <button class="btn2--caution" id="btn-submit-edit">Save</button>
+                    <button class="btn2" id="btn-cancel-edit" onclick="_profileFns.cancelEdit('<%= activity._id %>')">Cancel</button>
+                  </div>
+                </div>
               <% } %>
             <% } %>
           </div>

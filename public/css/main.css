@@ -158,6 +158,54 @@ main {
   background-color: #b9daff;
 }
 
+.btn2 {
+  font: inherit;
+  border: 1px solid #1154a1;
+  color: #1154a1;
+  background: white;
+  border-radius: 3px;
+  cursor: pointer;
+  padding: 0.5rem 1rem;
+  width: 100%;
+}
+
+.btn2:hover {
+  background-color: #1154a1;
+  color: white;  
+}
+
+.btn2:active {
+  background-color: #b9daff;
+  box-shadow: 1px 1px 2px black;
+  position: relative;
+  top: 1px;
+  left: 1px;
+}
+
+.btn2--caution { 
+  font: inherit;
+  border: 1px solid #1154a1;
+  color: black;
+  background: #fdcc5e;
+  border-radius: 3px;
+  cursor: pointer;
+  padding: 0.5rem 1rem;
+  width: 100%;
+}
+
+.btn2--caution:hover {
+  background-color: #ffb915;
+  color: white;  
+}
+
+.btn2--caution:active {
+  background-color: #ffd470;
+  box-shadow: 1px 1px 2px black;
+  position: relative;
+  top: 1px;
+  left: 1px;
+}
+
 p {
 	font-weight: lighter;
 	font-size: 0.8rem;

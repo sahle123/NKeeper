@@ -106,7 +106,7 @@ section {
 }
 
 textarea.new-activity {
-  resize: none;
+  resize: true;
   height: 6rem;
   width: 99%;
 }

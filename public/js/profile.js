@@ -21,40 +21,45 @@ import { Gateway, buildPostRequest } from './shared.js';
     activitiesEditDesc: '.activities__list--subcontent--desc'
   }
 
+  // All IDs on the profile page that are not dynamic.
+  const _idList = {
+    userId: 'userId',
+    firstName: 'first-name',
+    middleName: 'middle-name',
+    lastName: 'last-name',
+    summary: 'summary-section',
+    emailContent: 'email-content',
+    phoneContent: 'phone-content',
+    whatsappContent: 'whatsapp-content',
+    dobContent: 'dob-content',
+    nationalityContent: 'nationality-content',
+    livingInContent: 'livingIn-content',
+    newActivitySection: 'new-activity-section',
+    newActivityDesc: 'new-activity-desc',
+    newActivityDate: 'new-activity-date',
+  };
+
+  // All buttons on the page.
+  const _btnList = {
+    editBtn: 'edit-page-button',
+    toggleActivity: 'btn-toggle-activity',
+    submitActivity: 'btn-submit-activity',
+    cancelActivity: 'btn-cancel-activity',
+    submitEdit: 'btn-submit-edit',
+    cancelEdit: 'btn-cancel-edit'
+  };
+
+  //
+  // ACTIONS
+  //
   // Initialize listener and IDs for the page.
   const addEventListeners = () => {
 
-    // All IDs on the profile page.
-    const idList = {
-      userId: 'userId',
-      firstName: 'first-name',
-      middleName: 'middle-name',
-      lastName: 'last-name',
-      summary: 'summary-section',
-      emailContent: 'email-content',
-      phoneContent: 'phone-content',
-      whatsappContent: 'whatsapp-content',
-      dobContent: 'dob-content',
-      nationalityContent: 'nationality-content',
-      livingInContent: 'livingIn-content',
-      newActivitySection: 'new-activity-section',
-      newActivityDesc: 'new-activity-desc',
-      newActivityDate: 'new-activity-date'
-    };
+    const editBtn = document.getElementById(_btnList.editBtn);
+    editBtn.onclick = () => { toggleEditModeState(_idList, _btnList); }
 
-    // All buttons on the page.
-    const btnList = {
-      editBtn: 'edit-page-button',
-      toggleActivityBtn: 'btn-toggle-activity',
-      submitActivityBtn: 'btn-submit-activity',
-      cancelActivityBtn: 'btn-cancel-activity'
-    };
-
-    const editBtn = document.getElementById(btnList.editBtn);
-    editBtn.onclick = () => { toggleEditModeState(idList, btnList); }
-
-    const toggleActivityBtn = document.getElementById(btnList.toggleActivityBtn);
-    toggleActivityBtn.onclick = () => { toggleAddActivity(idList, btnList); }
+    const toggleActivityBtn = document.getElementById(_btnList.toggleActivity);
+    toggleActivityBtn.onclick = () => { toggleAddActivity(_idList, _btnList); }
   }
 
   // Toggles the state of the page to and from EDIT_MODE.
@@ -281,13 +286,13 @@ import { Gateway, buildPostRequest } from './shared.js';
     const activityHtml = `
     <div class="flex-container--nowrap">
       <p class="date">
-        <input name="datePicker" type="text" placeholder="Add date" autocomplete="off" id="new-activity-date">
+        <input name="datePicker" type="text" placeholder="Add date" autocomplete="off" id="${idList.newActivityDate}">
       </p>
-      <textarea class="new-activity" placeholder="Add activity details" id="new-activity-desc"></textarea>
+      <textarea class="new-activity" placeholder="Add activity details" id="${idList.newActivityDesc}"></textarea>
     </div>
     <div class="confirmation-buttons">
-      <button class="btn" id="btn-submit-activity">Submit</button>
-      <button class="btn" id="btn-cancel-activity">Cancel</button>
+      <button class="btn" id="${btnList.submitActivity}">Submit</button>
+      <button class="btn" id="${btnList.cancelActivity}">Cancel</button>
     </div>`;
 
     if (STATE.addActivity) {
@@ -362,22 +367,43 @@ import { Gateway, buildPostRequest } from './shared.js';
 
     const activity = document.getElementById(activityId);
 
-    // Hide activity description
+    // Get original activity desc
     const descEl = activity.querySelector(_classSelectors.activitiesEditDesc);
-    descEl.classList.add('hide');
+    //descEl.classList.add('hide');
 
-    // Show edit activity markup.
-    // DEV-NOTE: Try adding a node from the parent object. Assign it an ID so it can be tracked.
+    // Add textarea for editing the activity.
+    const editActivityHtml = `<textarea class="new-activity" placeholder="Edit activtiy details" id="${activityId}-desc">${descEl.innerHTML}</textarea>`;
+    const editActivityAnchor = document.getElementById(`${activityId}-edit-desc`);
+    // editActivityAnchor.classList.remove('hide');
+    editActivityAnchor.innerHTML = editActivityHtml;
 
-    // const editActivityHtml = `<textarea class="new-activity" placeholder="Edit activtiy details" id="${activityId}-desc">${descEl.innerHTML}</textarea>`;
-    // const editActivityAnchor = document.getElementById(`${activityId}-anchor`);
+    // Reveal the edit section
+    const editActivitySection = document.getElementById(`${activityId}-edit-section`);
+    editActivitySection.classList.remove('hide');
+    editActivitySection.classList.add('activities__list--subcontent');
 
-    // editActivityAnchor.innerHTML = editActivityHtml;
+    // Hide the original activity section.
+    const originalActivitySection = document.getElementById(`${activityId}`);
+    originalActivitySection.classList.remove('activities__list--subcontent')
+    originalActivitySection.classList.add('hide');
   }
 
-  const cancelEditActivity = async (activityId) => {
+  // Cancels the edit activity action.
+  const cancelEdit = async (activityId) => {
+    const activity = document.getElementById(activityId);
+
+    // Hide edit activity section
+    const editActivitySection = document.getElementById(`${activityId}-edit-section`);
+    editActivitySection.classList.remove('activities__list--subcontent');
+    editActivitySection.classList.add('hide');
+
+    // Show the riginal activity section.
+    const originalActivitySection = document.getElementById(`${activityId}`);
+    originalActivitySection.classList.add('activities__list--subcontent')
+    originalActivitySection.classList.remove('hide');
 
   }
+
 
   // Main initialization
   function init() {
@@ -387,6 +413,6 @@ import { Gateway, buildPostRequest } from './shared.js';
   init();
 
   // For any functions I need directly accessible to the DOM.
-  window._profileFns = { deleteActivity, editActivity };
+  window._profileFns = { deleteActivity, editActivity, cancelEdit };
 })();
 

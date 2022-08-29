@@ -31,6 +31,9 @@ const closeDropdownMenu = (menuId) => {
   document.getElementById(menuId).classList.remove('show');
 } 
 
+// DEV-NOTE: Comment later...
+const deleteActivity = () => { }
+
 // Closes dropdown menu if user clicks outside of the menu
 window.onclick = function (event) {
   const dropdowns = document.getElementsByClassName("dropdown-menu");
@@ -58,36 +61,8 @@ window.onclick = function (event) {
 
 }
 
-// ----------------------------------------------------------------------------
-// ----------------------------------------------------------------------------
-// POST requests
-// Sends request to server to delete the selected activity. 
-const deleteActivity = async (activityId) => {
-
-  const rawBody = {
-    activityId: activityId
-  };
-
-  const request = buildPostRequest(rawBody);
-
-  const response = await fetch(`${GATEWAY}/main/profile/delete-activity`, request);
-
-  // DEV-NOTE: Toast message based on response.
-
-  // Remove element from browser.
-  document.getElementById(activityId).remove();
-}
-
-// Updates an activity in for a given Contact.
-const editActivity = async (activityId, desc) => {
-
-  const rawBody = { 
-    activityId: activityId,
-    desc: desc
-  };
-}
 
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 // Moving all necessary event listeners to global scope.
-window._menus = { toggleDropdownMenu, closeDropdownMenu, deleteActivity }
+window._menus = { toggleDropdownMenu, closeDropdownMenu }
