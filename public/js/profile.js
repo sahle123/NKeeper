@@ -308,10 +308,10 @@ import { Gateway, buildPostRequest } from './shared.js';
       });
 
       // Add click event
-      const postActivityBtn = document.getElementById(btnList.submitActivityBtn);
+      const postActivityBtn = document.getElementById(btnList.submitActivity);
       postActivityBtn.onclick = () => { postActivity(idList, btnList); }
 
-      const cancelBtn = document.getElementById(btnList.cancelActivityBtn);
+      const cancelBtn = document.getElementById(btnList.cancelActivity);
       cancelBtn.onclick = () => { toggleAddActivity(idList, btnList); }
     }
     else {
@@ -340,6 +340,7 @@ import { Gateway, buildPostRequest } from './shared.js';
     if (response.status === 200)
       location.reload();
     else {
+      location.href = response.url;
       console.error("Something went wrong sending activity data...");
       // DEV-NOTE: Toast message here for error.
     }
@@ -372,9 +373,8 @@ import { Gateway, buildPostRequest } from './shared.js';
     //descEl.classList.add('hide');
 
     // Add textarea for editing the activity.
-    const editActivityHtml = `<textarea class="new-activity" placeholder="Edit activtiy details" id="${activityId}-desc">${descEl.innerHTML}</textarea>`;
-    const editActivityAnchor = document.getElementById(`${activityId}-edit-desc`);
-    // editActivityAnchor.classList.remove('hide');
+    const editActivityHtml = `<textarea class="new-activity" placeholder="Edit activtiy details" id="${activityId}-edit-desc">${descEl.innerHTML}</textarea>`;
+    const editActivityAnchor = document.getElementById(`${activityId}-edit`);
     editActivityAnchor.innerHTML = editActivityHtml;
 
     // Reveal the edit section
@@ -390,7 +390,7 @@ import { Gateway, buildPostRequest } from './shared.js';
 
   // Cancels the edit activity action.
   const cancelEdit = async (activityId) => {
-    const activity = document.getElementById(activityId);
+    //const activity = document.getElementById(activityId);
 
     // Hide edit activity section
     const editActivitySection = document.getElementById(`${activityId}-edit-section`);
@@ -399,9 +399,39 @@ import { Gateway, buildPostRequest } from './shared.js';
 
     // Show the riginal activity section.
     const originalActivitySection = document.getElementById(`${activityId}`);
-    originalActivitySection.classList.add('activities__list--subcontent')
+    originalActivitySection.classList.add('activities__list--subcontent');
     originalActivitySection.classList.remove('hide');
+  }
 
+  // Posts edited activity to MongoDB.
+  const saveEdit = async (activityId) => {
+    const userId = document.getElementById(_idList.userId);
+    const editedActivity = document.getElementById(activityId + "-edit-desc");
+
+    const rawBody = {
+      userId: userId.value,
+      activityId: activityId,
+      desc: editedActivity.value,
+      date: null
+    };
+
+    const request = buildPostRequest(rawBody);
+
+    // Send out request
+    const response = await fetch(`${GATEWAY}/main/profile/edit-activity`, request);
+
+    //await cancelEdit(activityId);
+
+    console.log(response.status);
+
+    // Refresh page if successful.
+    if (response.status === 200)
+      location.reload();
+    else {
+      location.href = response.url;
+      // DEV-NOTE: Toast message.
+      console.log("Something went wrong server side...");
+    }
   }
 
 
@@ -413,6 +443,6 @@ import { Gateway, buildPostRequest } from './shared.js';
   init();
 
   // For any functions I need directly accessible to the DOM.
-  window._profileFns = { deleteActivity, editActivity, cancelEdit };
+  window._profileFns = { deleteActivity, editActivity, cancelEdit, saveEdit };
 })();
 

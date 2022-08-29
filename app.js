@@ -28,6 +28,7 @@ app.set('views', './views');
 // ROUTES INCLUDES
 const errorRoutes = require('./routes/error');
 const profileRoutes = require('./routes/profile');
+const newContactRoutes = require('./routes/newContact');
 
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
@@ -42,7 +43,8 @@ app.use(express.static(path.join(__dirname, "public")));
 
 //
 // ROUTING MIDDLEWARE REGISTRATION
-app.use('/main',corsPolicy, profileRoutes);
+app.use('/main', corsPolicy, profileRoutes);
+app.use('/newContact', corsPolicy, newContactRoutes);
 // Make sure this one is last since the errors are the last resort.
 app.use('/', errorRoutes);
 

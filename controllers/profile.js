@@ -8,7 +8,8 @@ const Contact = require('../models/contact');
 const Activity = require('../models/activity');
 
 
-// Fetches profile
+// Fetches any profile
+// DEV-NOTE: Might need removal later.
 exports.getProfile = (req, res, next) => {
   Contact
     .findOne()
@@ -20,8 +21,30 @@ exports.getProfile = (req, res, next) => {
       if (!result) { add_temp_data_mongo(); }
 
       // Sort activities DESC
-      result.activities.sort((a, b) => { return dateTimeDesc(a, b) });
+      result.activities.sort((a, b) => { return dateTimeDesc(a, b); });
 
+      res.render('main/profile', {
+        prop: result,
+        lastActivity: getLastActivityDate(result),
+        age: getAge(result.dob),
+        pageTitle: 'User profile'
+      });
+    })
+    .catch(err => { errHelper.redirect500(res, err); });
+};
+
+
+// Fetches a profile by its ID
+exports.getProfileById = (req, res, next) => {
+  const profileId = req.params.profileId;
+  Contact
+    .findById(profileId)
+    .populate({ path: 'activities', model: 'Activity'})
+    .sort({ date: 1})
+    .then(result => {
+
+      // Sort activities DESC
+      result.activities.sort((a, b) => { return dateTimeDesc(a, b); });
       res.render('main/profile', {
         prop: result,
         lastActivity: getLastActivityDate(result),
@@ -58,6 +81,7 @@ exports.updateProfile = (req, res, next) => {
 };
 
 // Adds activity for some contact.
+// DEV-NOTE: Needs text sanitizers
 exports.addActivity = async (req, res, next) => {
 
   try {
@@ -76,9 +100,10 @@ exports.addActivity = async (req, res, next) => {
     contactResult.activities.push(activityResult._id);
     await contactResult.save();
 
-    res.redirect('/main/profile');
-
     logger.plog("Added new activity!!!");
+    // res.status(200);
+    // res.send('');
+    res.redirect('/main/profile');
   }
   catch (err) { errHelper.redirect500(res, err); }
 }
@@ -106,6 +131,29 @@ exports.deleteActivity = async (req, res, next) => {
   catch (err) { errHelper.redirect500(res, err); }
 }
 
+// Edits an activity
+// DEV-NOTE: Needs text saniitizers
+exports.editActivity = async (req, res, next) => {
+  try {
+
+    const activityResult = await Activity.findById(req.body.activityId);
+
+    if (String(activityResult.userId) === String(req.body.userId)) {
+      activityResult.desc = req.body.desc;
+      // activity date is not changeable for now.
+      await activityResult.save();
+
+      logger.plog("Edited activity ID: " + req.body.activityId);
+
+      res.status(200);
+      res.send('');
+    }
+    else {
+      throw "User ID mismatch for editActivity()";
+    }
+  }
+  catch (err) { errHelper.redirect500(res, err); }
+}
 
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
@@ -142,7 +190,7 @@ const getAge = (dateString) => {
   if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
     age--;
   }
-  
+
   return age;
 }
 
