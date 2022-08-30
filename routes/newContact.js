@@ -11,5 +11,8 @@ const router = express.Router();
 // GET /
 router.get('/', newContactController.getNewContact);
 
+// POST /
+router.post('/', newContactController.postNewContact);
+
 
 module.exports = router;

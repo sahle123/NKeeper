@@ -25,10 +25,8 @@ export function buildPostRequest(rawBody) {
 }
 
 // All IDs on the profile page.
-export const idList = {
+// export const idList = {
+// };
 
-};
-
-export const btnList = { 
-
-}
+// export const btnList = { 
+// }

@@ -13,3 +13,32 @@ exports.getNewContact = (req, res, next) => {
     pageTitle: 'New contact'
   });
 };
+
+
+exports.postNewContact = (req, res, next) => {
+
+  // DEV-NOTE: Add server-side validators here.
+
+  const contact = new Contact({
+    firstName: req.body.firstName,
+    middleName: req.body.middleName,
+    lastName: req.body.lastName,
+    summary: req.body.summary,
+    dob: new Date(req.body.dob),
+    contactInfo: {
+      mobile: req.body.phone,
+      email: req.body.email,
+      whatsApp: req.body.whatsApp,
+      nationality: req.body.nationality,
+      livingIn: req.body.livingIn
+    }
+  });
+
+  contact
+    .save()
+    .then(result => {
+      logger.plog("Successfully created a new contact: " + String(result._id));
+      res.redirect(`/main/profile/${String(result._id)}`);
+    })
+    .catch(err => { errHelper.redirect500(res, err); });  
+};

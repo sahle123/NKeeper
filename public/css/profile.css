@@ -116,17 +116,6 @@ textarea.new-activity {
   text-align: right;
 }
 
-.date {
-  width: 10rem;
-  font-weight: lighter;
-}
-
-.date > input {
-  width: 70%;
-  cursor: pointer;
-  font-size: 0.8rem;
-}
-
 .activities__list {
   width: 100%;
 }

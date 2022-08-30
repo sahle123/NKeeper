@@ -33,7 +33,6 @@ exports.getProfile = (req, res, next) => {
     .catch(err => { errHelper.redirect500(res, err); });
 };
 
-
 // Fetches a profile by its ID
 exports.getProfileById = (req, res, next) => {
   const profileId = req.params.profileId;

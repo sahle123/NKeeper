@@ -1,6 +1,6 @@
 /*
 * Does very basic state management stuff of the page. Perhaps it would've been 
-* better to use a framework, but I like learning the hardway for the sake of
+* better to use a framework, but I like learning the hard way for the sake of
 * learning.
 */
 'use strict';
@@ -36,7 +36,7 @@ import { Gateway, buildPostRequest } from './shared.js';
     livingInContent: 'livingIn-content',
     newActivitySection: 'new-activity-section',
     newActivityDesc: 'new-activity-desc',
-    newActivityDate: 'new-activity-date',
+    newActivityDate: 'new-activity-date'
   };
 
   // All buttons on the page.
@@ -48,6 +48,7 @@ import { Gateway, buildPostRequest } from './shared.js';
     submitEdit: 'btn-submit-edit',
     cancelEdit: 'btn-cancel-edit'
   };
+
 
   //
   // ACTIONS
@@ -439,10 +440,11 @@ import { Gateway, buildPostRequest } from './shared.js';
   function init() {
     addEventListeners();
   }
-
   init();
 
+  //
   // For any functions I need directly accessible to the DOM.
+  //
   window._profileFns = { deleteActivity, editActivity, cancelEdit, saveEdit };
 })();
 
