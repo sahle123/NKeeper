@@ -1,0 +1,35 @@
+<%- include('../includes/head.ejs') %>
+<link rel="stylesheet" href="/css/dtsel/dtsel.css">
+</head>
+
+<body>
+  <noscript>JavaScript is required in order for this to work.</noscript>
+  <%- include('../includes/navigation.ejs') %>
+  
+  <main class="padded">
+
+    <!-- Title -->
+    <section>
+      <h2>Search Contacts</h2>
+    </section>
+
+    <!-- Search section -->
+    <section>
+      <div class="form-control">
+        <label>Search contacts</label>
+        <input type="text" id="search-field" placeholder="Type the name of the contact">
+      </div>
+    </section>
+
+    <!-- Search results -->
+    <section id="search-results">
+
+    </section>
+
+  </main>
+
+  <script src="/js/shared.js" type="module"></script>
+  <script src="/js/dtsel/dtsel.js" type="text/javascript"></script>
+  <script src="/js/search.js" type="module"></script>
+  
+<%- include('../includes/end.ejs') %>

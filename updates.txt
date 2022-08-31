@@ -1,7 +1,0 @@
-1. server-side text sanitizers for all POST requests in:
-  - profile
-  - newContact
-
-2. JS minifiers to help reduce file sizes.
-
-3. Add a favicon for all pages.

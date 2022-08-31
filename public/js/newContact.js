@@ -1,7 +1,3 @@
-/*
-* DEV-NOTE: Comment later...
-*/
-
 'use strict';
 
 import { Gateway, buildPostRequest } from './shared.js';
@@ -55,7 +51,7 @@ import { Gateway, buildPostRequest } from './shared.js';
       summary: summary.value.trim(),
       email: email.value.trim(),
       phone: phone.value.trim(),
-      whatsapp: whatsapp.value.trim(),
+      whatsApp: whatsapp.value.trim(),
       dob: dob.value.trim(),
       nationality: nationality.value.trim(),
       livingIn: livingIn.value.trim()
@@ -90,6 +86,5 @@ import { Gateway, buildPostRequest } from './shared.js';
   //
   // DOM exposed actions
   //
-
   window._newContactFns = { clearPage, submitContact }
 })();

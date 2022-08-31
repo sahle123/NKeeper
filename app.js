@@ -29,6 +29,7 @@ app.set('views', './views');
 const errorRoutes = require('./routes/error');
 const profileRoutes = require('./routes/profile');
 const newContactRoutes = require('./routes/newContact');
+const searchRoutes = require('./routes/search');
 
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
@@ -45,12 +46,14 @@ app.use(express.static(path.join(__dirname, "public")));
 // ROUTING MIDDLEWARE REGISTRATION
 app.use('/main', corsPolicy, profileRoutes);
 app.use('/newContact', corsPolicy, newContactRoutes);
+app.use('/search', corsPolicy, searchRoutes);
 // Make sure this one is last since the errors are the last resort.
 app.use('/', errorRoutes);
 
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 logger.log("Starting Node.js server...");
+logger.log("Connecting to MongoDB...");
 
 mongooseConnect(() => {
   app.listen(PORT, () => {
