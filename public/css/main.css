@@ -313,3 +313,18 @@ hr {
   cursor: pointer;
   font-size: 0.8rem;
 }
+
+.contact__info {
+  font: inherit;
+  padding: 1rem;
+  border-bottom: 1px solid black;
+  margin-bottom: 1rem;
+}
+
+.contact__link {
+  text-decoration: none;
+}
+
+.contact__link:hover {
+  text-decoration: underline;
+}

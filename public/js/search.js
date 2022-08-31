@@ -2,7 +2,6 @@
 
 import { Gateway, buildPostRequest } from './shared.js';
 
-
 (function() {
 
   const GATEWAY = Gateway;
@@ -16,6 +15,9 @@ import { Gateway, buildPostRequest } from './shared.js';
   const postSearch = async (searchValue) => {
     resetSearchResults();
     
+    if(!searchValue)
+      return;
+
     const request = buildPostRequest({contact: searchValue});
     const response = await fetch(`${GATEWAY}/search`, request);
 
@@ -25,18 +27,23 @@ import { Gateway, buildPostRequest } from './shared.js';
       console.log("No contacts found");
     }
     else {
-      console.log("We found: " + contacts.length + " contacts");
+      //console.log("We found: " + contacts.length + " contacts");
       contacts.forEach(buildSearchResult);
     }
   }
 
   // Builds the search result into HTML format.
   const buildSearchResult = (contactDetails) => {
+    const contactLink = `${GATEWAY}/main/profile/${String(contactDetails._id)}`;
+    const fullName = contactDetails.firstName + " " + contactDetails.middleName + " " + contactDetails.lastName; 
+
     const searchResultSection = document.getElementById(_searchResults);
 
     const contact = document.createElement("div");
-    contact.classList.add("some-class");
-    contact.innerHTML = `<p>${contactDetails.firstName}</p>`
+    //contact.classList.add("some-class");
+    contact.innerHTML = `<p class="contact__info">
+      <a href="${contactLink}" class="contact__link">${fullName}</a>
+    </p>`
 
     searchResultSection.appendChild(contact);
   }

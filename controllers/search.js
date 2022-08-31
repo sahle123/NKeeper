@@ -16,12 +16,19 @@ exports.getSearchPage = (req, res, next) => {
 }
 
 exports.searchContacts = (req, res, next) => {
-  
-  const firstName = req.body.contact;
-  // DEV-NOTE: Separate name by parts
+  const names = req.body.contact.split(" ");
+
+  // DEV-NOTE: Should make this more robust later...
+  const firstName = (names.length > 0) ? names[0] : "";
+  const middleName = (names.length > 1) ? names[1] : "";
+  const lastName = (names.length > 2) ? names[2] : "";
 
   Contact
-    .find( { firstName: { "$regex": firstName, "$options": 'i'} }, null, { limit: _returnLimit} )
+    .find({
+      firstName: { "$regex": firstName, "$options": 'i' },
+      middleName: { "$regex": middleName, "$options": 'i' },
+      lastName: { "$regex": lastName, "$options": 'i' }
+    }, null, { limit: _returnLimit })
     .then((result) => {
       //logger.plog(result);
 
