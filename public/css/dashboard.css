@@ -1,0 +1,27 @@
+.flex-row { 
+  display: flex;
+  margin-bottom: 2rem;
+  width: 100%;
+}
+
+.flex-row > * {
+  flex: 1;
+  padding: 1rem;
+  margin: 0 2px;
+  border: 1px solid black;
+  border-radius: 10px;
+}
+
+.dashboard-item__title {
+  font-weight: lighter;
+}
+
+.dashboard-item__content,
+.dashboard-item__content > * {
+  font-size: 1rem;
+}
+
+.dashboard-item__content:hover {
+  font-weight: bold;
+  cursor: default;
+}

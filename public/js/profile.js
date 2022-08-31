@@ -36,7 +36,8 @@ import { Gateway, buildPostRequest } from './shared.js';
     livingInContent: 'livingIn-content',
     newActivitySection: 'new-activity-section',
     newActivityDesc: 'new-activity-desc',
-    newActivityDate: 'new-activity-date'
+    newActivityDate: 'new-activity-date',
+    imageSection: 'image-section'
   };
 
   // All buttons on the page.
@@ -447,4 +448,3 @@ import { Gateway, buildPostRequest } from './shared.js';
   //
   window._profileFns = { deleteActivity, editActivity, cancelEdit, saveEdit };
 })();
-

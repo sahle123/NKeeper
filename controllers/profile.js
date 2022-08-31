@@ -38,8 +38,8 @@ exports.getProfileById = (req, res, next) => {
   const profileId = req.params.profileId;
   Contact
     .findById(profileId)
-    .populate({ path: 'activities', model: 'Activity'})
-    .sort({ date: 1})
+    .populate({ path: 'activities', model: 'Activity' })
+    .sort({ date: 1 })
     .then(result => {
 
       // Sort activities DESC
@@ -134,7 +134,6 @@ exports.deleteActivity = async (req, res, next) => {
 // DEV-NOTE: Needs text saniitizers
 exports.editActivity = async (req, res, next) => {
   try {
-
     const activityResult = await Activity.findById(req.body.activityId);
 
     if (String(activityResult.userId) === String(req.body.userId)) {

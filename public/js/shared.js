@@ -24,6 +24,15 @@ export function buildPostRequest(rawBody) {
     }
 }
 
+export const DateTimeSettings = {
+  scheme: 'fr-CA',
+  options: {
+    year: 'numeric', 
+    month: 'numeric', 
+    day: 'numeric'
+  }
+};
+
 // All IDs on the profile page.
 // export const idList = {
 // };

@@ -10,10 +10,12 @@ body {
   padding: 0;
   margin: 0;
   font-family: 'Fira Sans', 'Open Sans', sans-serif;
+  background-color: #282828;
 }
 
 main {
   margin: auto;
+  background-color: white;
 }
 
 main.padded {
