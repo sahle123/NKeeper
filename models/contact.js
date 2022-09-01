@@ -25,11 +25,8 @@ const contactSchema = new Schema({
     nationality: { type: String, required: false },
     livingIn: { type: String, required: false }
   },
-  // attributes: {
-  //   nationality: { type: String, required: false },
-  //   country: { type: String, required: false }
-  // },
-  activities: [{ type: Schema.Types.ObjectId, required: false }]
+  activities: [{ type: Schema.Types.ObjectId, required: false }],
+  images: [{ type: Schema.Types.ObjectId, required: false }]
 });
 
 

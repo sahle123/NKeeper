@@ -14,6 +14,7 @@ exports.getProfile = (req, res, next) => {
   Contact
     .findOne()
     .populate({ path: 'activities', model: 'Activity' })
+    .populate({ path: 'images', model: 'Image' })
     .sort({ date: 1 })
     .then(result => {
 
@@ -25,6 +26,7 @@ exports.getProfile = (req, res, next) => {
 
       res.render('main/profile', {
         prop: result,
+        images: imageArray,
         lastActivity: getLastActivityDate(result),
         age: getAge(result.dob),
         pageTitle: 'User profile'
@@ -39,11 +41,13 @@ exports.getProfileById = (req, res, next) => {
   Contact
     .findById(profileId)
     .populate({ path: 'activities', model: 'Activity' })
+    .populate({ path: 'images', model: 'Image' })
     .sort({ date: 1 })
     .then(result => {
 
       // Sort activities DESC
       result.activities.sort((a, b) => { return dateTimeDesc(a, b); });
+
       res.render('main/profile', {
         prop: result,
         lastActivity: getLastActivityDate(result),
@@ -53,6 +57,8 @@ exports.getProfileById = (req, res, next) => {
     })
     .catch(err => { errHelper.redirect500(res, err); });
 };
+
+
 
 // Updates profile
 // DEV-NOTE: Needs text sanitizers
@@ -105,7 +111,7 @@ exports.addActivity = async (req, res, next) => {
     res.redirect('/main/profile');
   }
   catch (err) { errHelper.redirect500(res, err); }
-}
+};
 
 // Deletes activity for some contact.
 exports.deleteActivity = async (req, res, next) => {
@@ -128,7 +134,7 @@ exports.deleteActivity = async (req, res, next) => {
     res.redirect('/main/profile');
   }
   catch (err) { errHelper.redirect500(res, err); }
-}
+};
 
 // Edits an activity
 // DEV-NOTE: Needs text saniitizers
@@ -151,7 +157,8 @@ exports.editActivity = async (req, res, next) => {
     }
   }
   catch (err) { errHelper.redirect500(res, err); }
-}
+};
+
 
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------

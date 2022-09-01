@@ -5,7 +5,7 @@
 */
 'use strict';
 
-import { Gateway, buildPostRequest } from './shared.js';
+import { Gateway, buildPostRequest, UrlifyImage } from './shared.js';
 
 (function () {
   // State of various elements within the page.
@@ -19,7 +19,7 @@ import { Gateway, buildPostRequest } from './shared.js';
   // CSS selectors used in this JS file for element selection.
   const _classSelectors = {
     activitiesEditDesc: '.activities__list--subcontent--desc'
-  }
+  };
 
   // All IDs on the profile page that are not dynamic.
   const _idList = {
@@ -47,14 +47,16 @@ import { Gateway, buildPostRequest } from './shared.js';
     submitActivity: 'btn-submit-activity',
     cancelActivity: 'btn-cancel-activity',
     submitEdit: 'btn-submit-edit',
-    cancelEdit: 'btn-cancel-edit'
+    cancelEdit: 'btn-cancel-edit',
+    addNewImage: 'btn-add-new-image',
+    hiddenImgUpload: 'hidden-upload-image'
   };
 
 
   //
   // ACTIONS
   //
-  // Initialize listener and IDs for the page.
+  // Initialize listeners and IDs for the page.
   const addEventListeners = () => {
 
     const editBtn = document.getElementById(_btnList.editBtn);
@@ -62,7 +64,18 @@ import { Gateway, buildPostRequest } from './shared.js';
 
     const toggleActivityBtn = document.getElementById(_btnList.toggleActivity);
     toggleActivityBtn.onclick = () => { toggleAddActivity(_idList, _btnList); }
-  }
+
+    // For registering clicks on the image icon.
+    const addImageIcon = document.getElementById(_btnList.addNewImage);
+    addImageIcon.addEventListener("click", (e) => {
+      const hiddenInput = document.getElementById(_btnList.hiddenImgUpload);
+      if (hiddenInput)
+        hiddenInput.click();
+      else
+        console.error("Upload image not working. :(");
+    });
+
+  };
 
   // Toggles the state of the page to and from EDIT_MODE.
   const toggleEditModeState = (idList, btnList) => {
@@ -78,6 +91,7 @@ import { Gateway, buildPostRequest } from './shared.js';
     const firstName = document.getElementById(idList.firstName);
     const middleName = document.getElementById(idList.middleName);
     const lastName = document.getElementById(idList.lastName);
+    const imageSection = document.getElementById(idList.imageSection);
 
     // Editing
     if (STATE.editPage) {
@@ -122,6 +136,17 @@ import { Gateway, buildPostRequest } from './shared.js';
       lastName.appendChild(inputLastName);
 
       //
+      // Image section
+      const plusImage = document.getElementById(_btnList.addNewImage);
+      plusImage.classList.remove('hide');
+
+      const helpfulText = document.createElement('p');
+      helpfulText.innerHTML = "You can upload images here";
+
+      imageSection.appendChild(plusImage);
+      imageSection.appendChild(helpfulText);
+
+      //
       // Summary section
       const summaryContent = summary.innerHTML;
       summary.innerHTML = null;
@@ -133,7 +158,6 @@ import { Gateway, buildPostRequest } from './shared.js';
 
       //
       // Contact information
-
       const emailContent = email.innerHTML;
       const inputEmail = document.createElement('input');
       email.innerHTML = null;
@@ -240,7 +264,7 @@ import { Gateway, buildPostRequest } from './shared.js';
 
       postChanges(idList);
     }
-  }
+  };
 
   // Posts all changes to MongoDB.
   const postChanges = async (idList) => {
@@ -255,6 +279,7 @@ import { Gateway, buildPostRequest } from './shared.js';
     const dob = document.getElementById(idList.dobContent);
     const nationality = document.getElementById(idList.nationalityContent);
     const livingIn = document.getElementById(idList.livingInContent);
+    const hiddenImgUpload = document.getElementById(_btnList.hiddenImgUpload);
 
     const rawBody = {
       userId: userId.value,
@@ -267,17 +292,33 @@ import { Gateway, buildPostRequest } from './shared.js';
       whatsapp: whatsapp.innerHTML.trim(),
       dob: dob.innerHTML.trim(),
       nationality: nationality.innerHTML.trim(),
-      livingIn: livingIn.innerHTML.trim()
+      livingIn: livingIn.innerHTML.trim(),
     };
 
     const request = buildPostRequest(rawBody);
-
     const response = await fetch(`${GATEWAY}/main/profile`, request);
+
+    // Upload image
+    if (hiddenImgUpload.files.length > 0) {
+      const imgUpload = hiddenImgUpload.files[0];
+      const imgData = new FormData();
+      imgData.append('img', imgUpload);
+      imgData.append('contactId', userId.value);
+
+      const imgUploadResponse = await fetch(`${GATEWAY}/main/profile/upload-image`, {
+        method: "POST",
+        body: imgData
+      });
+
+      if (imgUploadResponse.status !== 200)
+        console.error("Had issue uploading photo.");
+    }
+
     // DEV-NOTE: Toast message based on response.
 
     // Refresh page.
     location.reload();
-  }
+  };
 
   // Toggles the state of the 'Add Activity' button.
   const toggleAddActivity = (idList, btnList) => {
@@ -321,7 +362,7 @@ import { Gateway, buildPostRequest } from './shared.js';
       addActivityAnchor.classList.add('hide');
       dateInstance = null;
     }
-  }
+  };
 
   // Posts new activity to MongoDB.
   const postActivity = async (idList) => {
@@ -346,7 +387,7 @@ import { Gateway, buildPostRequest } from './shared.js';
       console.error("Something went wrong sending activity data...");
       // DEV-NOTE: Toast message here for error.
     }
-  }
+  };
 
   // Sends request to server to delete the selected activity. 
   const deleteActivity = async (activityId) => {
@@ -363,7 +404,7 @@ import { Gateway, buildPostRequest } from './shared.js';
 
     // Remove element from browser.
     document.getElementById(activityId).remove();
-  }
+  };
 
   // Updates an activity in for a given Contact.
   const editActivity = async (activityId) => {
@@ -388,7 +429,7 @@ import { Gateway, buildPostRequest } from './shared.js';
     const originalActivitySection = document.getElementById(`${activityId}`);
     originalActivitySection.classList.remove('activities__list--subcontent')
     originalActivitySection.classList.add('hide');
-  }
+  };
 
   // Cancels the edit activity action.
   const cancelEdit = async (activityId) => {
@@ -403,7 +444,7 @@ import { Gateway, buildPostRequest } from './shared.js';
     const originalActivitySection = document.getElementById(`${activityId}`);
     originalActivitySection.classList.add('activities__list--subcontent');
     originalActivitySection.classList.remove('hide');
-  }
+  };
 
   // Posts edited activity to MongoDB.
   const saveEdit = async (activityId) => {
@@ -434,17 +475,41 @@ import { Gateway, buildPostRequest } from './shared.js';
       // DEV-NOTE: Toast message.
       console.log("Something went wrong server side...");
     }
-  }
+  };
+
+  // Dynamically displays new image on upload.
+  // This is client-side, still not on the server yet.
+  const displayNewUploadImg = (e) => {
+    const addImageIcon = document.getElementById(_btnList.addNewImage);
+    addImageIcon.src = URL.createObjectURL(e.target.files[0]);
+  };
 
 
   // Main initialization
-  function init() {
+  async function init() {
     addEventListeners();
+
+    // DEV-NOTE: Maybe move the code below into a function later...
+    const contactId = document.getElementById(_idList.userId).value;
+    const response = await fetch(`${GATEWAY}/main/profile/get-images/${contactId}`);
+    const responseContent = await response.json();
+    console.log(responseContent);
+
+    responseContent.forEach((el, index, arr) => {
+      const imgHtml = document.getElementById(el._id);
+      imgHtml.src = UrlifyImage(new Blob([el.data], {type: el.mimeType}) );
+    })
   }
   init();
 
   //
   // For any functions I need directly accessible to the DOM.
   //
-  window._profileFns = { deleteActivity, editActivity, cancelEdit, saveEdit };
+  window._profileFns = {
+    deleteActivity,
+    editActivity, 
+    cancelEdit, 
+    saveEdit, 
+    displayNewUploadImg
+  };
 })();

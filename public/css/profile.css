@@ -21,14 +21,33 @@ section {
 .image-carousel {
   display: flex;
   flex-flow: wrap;
-  justify-content: space-around;
+  /* justify-content: space-around; */
   padding: 1rem;
   overflow: auto;
-  height: 26rem;
+  min-height: 5rem;
 }
 
 .image-carousel > img {
   max-height: 25rem;
+  margin: 0.8rem;
+}
+
+.image__add-image {
+  padding: 2rem;
+  border: 1px solid black;
+  border-radius: 8px;
+  max-width: 12rem;
+}
+
+.image__add-image:hover {
+  background-color:rgb(240, 240, 240);
+}
+
+.image__add-image:active {
+  box-shadow: 1px 1px 2px black;
+  position: relative;
+  top: 1px;
+  left: 1px;
 }
 
 .profile-content {

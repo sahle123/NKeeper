@@ -4,6 +4,12 @@
 const express = require('express');
 
 const profileController = require('../controllers/profile');
+const imageController = require('../controllers/image');
+
+// For 'multipar/form-data' headers. i.e. file uploads.
+const multer = require('multer');
+const upload = multer();
+//const upload = multer({dest: 'uploads/'});
 
 const router = express.Router();
 
@@ -24,5 +30,14 @@ router.post('/profile/delete-activity', profileController.deleteActivity);
 
 // POST /profile/edit-activity
 router.post('/profile/edit-activity', profileController.editActivity);
+
+// GET /profile/get-images
+router.get('/profile/get-images/:profileId', imageController.getProfileImages);
+
+// POST /profile/upload-image
+router.post('/profile/upload-image', upload.single('img'), imageController.uploadImage);
+
+// POST /profile/delete-image
+// ...
 
 module.exports = router;

@@ -2,7 +2,7 @@
 * Each activity is associated with a Contact.
 */
 
-const logger = require('../utils/logger');
+//const logger = require('../utils/logger');
 
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;

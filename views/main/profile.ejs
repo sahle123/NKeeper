@@ -22,15 +22,13 @@
     </section>
 
     <section class="image-carousel" id="image-section">
-      <!--
-          <img
-            src="https://cdn.vox-cdn.com/thumbor/PjZOLcFllU-dkuD2XdaKpeY33U8=/0x0:2000x1334/920x613/filters:focal(744x446:1064x766):format(webp)/cdn.vox-cdn.com/uploads/chorus_image/image/55825803/hey_arnold_main.0.jpg"
-            alt="DUMMY IMAGE">
-          <img src="https://www.nme.com/wp-content/uploads/2017/10/Hey-Arnold-movie-696x442.png" alt="DUMMY IMAGE">
-          <img
-            src="https://static0.thethingsimages.com/wordpress/wp-content/uploads/2021/04/Hey-arnold-cast.jpg?q=50&fit=contain&w=960&h=500&dpr=1.5"
-            alt="DUMMY IMAGE">
-        -->
+      <% if (prop.images) { %>
+        <% for (let image of prop.images) { %>
+          <img alt="Contact's image" id="<%= image._id %>">
+        <% } %>
+      <% } %>
+      <input type="file" id="hidden-upload-image" accept="image/*" style="display:none" onchange="_profileFns.displayNewUploadImg(event)">
+      <img src="/media/plus-sign.png" alt="Add image" id="btn-add-new-image" class="image__add-image hide">
     </section>
 
     <section class="profile-content">

@@ -2,7 +2,6 @@
 * Shared members across all public JS files.
 * Also serves utility functions.
 */
-
 'use strict';
 
 // Gateway for connecting to Node.js server.
@@ -32,6 +31,13 @@ export const DateTimeSettings = {
     day: 'numeric'
   }
 };
+
+export function UrlifyImage(rawFile) {
+  if (!rawFile)
+    return null;
+
+    return URL.createObjectURL(rawFile);
+}
 
 // All IDs on the profile page.
 // export const idList = {
