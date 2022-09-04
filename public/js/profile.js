@@ -5,7 +5,7 @@
 */
 'use strict';
 
-import { Gateway, buildPostRequest, UrlifyImage } from './shared.js';
+import { Gateway, buildPostRequest, ConvertBase64ToImage } from './shared.js';
 
 (function () {
   // State of various elements within the page.
@@ -497,8 +497,10 @@ import { Gateway, buildPostRequest, UrlifyImage } from './shared.js';
 
     responseContent.forEach((el, index, arr) => {
       const imgHtml = document.getElementById(el._id);
-      imgHtml.src = UrlifyImage(new Blob([el.data], {type: el.mimeType}) );
-    })
+      imgHtml.src = ConvertBase64ToImage(el.data, el.mimeType);
+      //imgHtml.src = UrlifyImage(new Blob([el.data], {type: el.mimeType}) );
+    });
+
   }
   init();
 

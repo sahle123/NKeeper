@@ -14,7 +14,7 @@ const Schema = mongoose.Schema;
 // data field should be first converted to Base64.
 const imageSchema = new Schema({
   contactId: { type: Schema.Types.ObjectId, required: true },
-  data: { type: Buffer, required: true },
+  data: { type: String, required: true },
   fileExtension: { type: String, required: true },
   mimeType: { type: String, required: true }
 });

@@ -18,9 +18,9 @@ exports.getProfileImages = (req, res, next) => {
     .then(result => {
 
       // Decode base64 images
-      result.images.forEach((el, index, arr) => {
-        arr[index].data = decodeBase64(el.data);
-      });
+      // result.images.forEach((el, index, arr) => {
+      //   arr[index].data = decodeBase64(el.data);
+      // });
 
       res.status(200)
       res.send(result.images);

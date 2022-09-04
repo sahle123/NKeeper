@@ -36,7 +36,16 @@ export function UrlifyImage(rawFile) {
   if (!rawFile)
     return null;
 
+    //const result = `data:${rawFile.mimetype};base64,${}`
     return URL.createObjectURL(rawFile);
+}
+
+export function ConvertBase64ToImage(encodedImg, mimeType) {
+  if (!encodedImg || !mimeType)
+    return null;
+
+    const result = `data:${mimeType};base64,${encodedImg}`;
+    return result;
 }
 
 // All IDs on the profile page.

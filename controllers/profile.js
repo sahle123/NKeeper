@@ -26,7 +26,6 @@ exports.getProfile = (req, res, next) => {
 
       res.render('main/profile', {
         prop: result,
-        images: imageArray,
         lastActivity: getLastActivityDate(result),
         age: getAge(result.dob),
         pageTitle: 'User profile'
@@ -57,8 +56,6 @@ exports.getProfileById = (req, res, next) => {
     })
     .catch(err => { errHelper.redirect500(res, err); });
 };
-
-
 
 // Updates profile
 // DEV-NOTE: Needs text sanitizers
