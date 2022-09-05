@@ -23,13 +23,16 @@
 
     <!-- DEV-NOTE: Should probably change to <canvas> later... -->
     <section class="image-carousel" id="image-section">
-      <% if (prop.images) { %>
-        <% for (let image of prop.images) { %>
-          <img alt="Contact's image" id="<%= image._id %>">
-        <% } %>
-      <% } %>
       <input type="file" id="hidden-upload-image" accept="image/*" style="display:none" onchange="_profileFns.displayNewUploadImg(event)">
       <img src="/media/plus-sign.png" alt="Add image" id="btn-add-new-image" class="image__add-image hide">
+      <% if (prop.images) { %>
+        <% for (let image of prop.images) { %>
+          <div>
+            <button class="btn-delete-image hide" id="btn-delete-image-<%= image._id %>" onclick="_profileFns.deleteImage('<%= image._id %>')">X</button>
+            <img alt="Contact's image" id="<%= image._id %>">
+          </div>
+        <% } %>
+      <% } %>
     </section>
 
     <section class="profile-content">

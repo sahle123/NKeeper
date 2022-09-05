@@ -38,6 +38,7 @@ router.get('/profile/get-images/:profileId', imageController.getProfileImages);
 router.post('/profile/upload-image', upload.single('img'), imageController.uploadImage);
 
 // POST /profile/delete-image
-// ...
+router.post('/profile/delete-image/:imageId', imageController.deleteImage);
+
 
 module.exports = router;

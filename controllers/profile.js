@@ -123,6 +123,7 @@ exports.deleteActivity = async (req, res, next) => {
 
     // Remove activity ID from Contacts document.
     await Contact.findByIdAndUpdate(userId, {
+      // https://www.mongodb.com/docs/manual/reference/operator/update/pull/#-pull
       $pull: { activities: activityId }
     });
 

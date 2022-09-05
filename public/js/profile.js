@@ -18,7 +18,8 @@ import { Gateway, buildPostRequest, ConvertBase64ToImage } from './shared.js';
 
   // CSS selectors used in this JS file for element selection.
   const _classSelectors = {
-    activitiesEditDesc: '.activities__list--subcontent--desc'
+    activitiesEditDesc: '.activities__list--subcontent--desc',
+    deleteImgBtn: '.btn-delete-image'
   };
 
   // All IDs on the profile page that are not dynamic.
@@ -40,7 +41,7 @@ import { Gateway, buildPostRequest, ConvertBase64ToImage } from './shared.js';
     imageSection: 'image-section'
   };
 
-  // All buttons on the page.
+  // All unique buttons on the page.
   const _btnList = {
     editBtn: 'edit-page-button',
     toggleActivity: 'btn-toggle-activity',
@@ -92,6 +93,7 @@ import { Gateway, buildPostRequest, ConvertBase64ToImage } from './shared.js';
     const middleName = document.getElementById(idList.middleName);
     const lastName = document.getElementById(idList.lastName);
     const imageSection = document.getElementById(idList.imageSection);
+    const deleteImgBtns = document.querySelectorAll(_classSelectors.deleteImgBtn);
 
     // Editing
     if (STATE.editPage) {
@@ -143,8 +145,10 @@ import { Gateway, buildPostRequest, ConvertBase64ToImage } from './shared.js';
       const helpfulText = document.createElement('p');
       helpfulText.innerHTML = "You can upload images here";
 
-      imageSection.appendChild(plusImage);
-      imageSection.appendChild(helpfulText);
+      //imageSection.appendChild(helpfulText);
+      imageSection.insertBefore(helpfulText, plusImage);
+
+      deleteImgBtns.forEach(el => { el.classList.remove('hide'); });
 
       //
       // Summary section
@@ -233,6 +237,10 @@ import { Gateway, buildPostRequest, ConvertBase64ToImage } from './shared.js';
       middleName.innerHTML = inputMiddleName.value;
       const inputLastName = document.getElementById('last-name-input');
       lastName.innerHTML = inputLastName.value;
+
+      //
+      // Image section
+      deleteImgBtns.forEach(el => { el.classList.add('hide'); });
 
       //
       // Summary section
@@ -484,12 +492,9 @@ import { Gateway, buildPostRequest, ConvertBase64ToImage } from './shared.js';
     addImageIcon.src = URL.createObjectURL(e.target.files[0]);
   };
 
-
-  // Main initialization
-  async function init() {
-    addEventListeners();
-
-    // DEV-NOTE: Maybe move the code below into a function later...
+  // Called on page init.
+  // Fetches all images tied to this contact.
+  const fetchContactImages = async () => {
     const contactId = document.getElementById(_idList.userId).value;
     const response = await fetch(`${GATEWAY}/main/profile/get-images/${contactId}`);
     const responseContent = await response.json();
@@ -500,7 +505,28 @@ import { Gateway, buildPostRequest, ConvertBase64ToImage } from './shared.js';
       imgHtml.src = ConvertBase64ToImage(el.data, el.mimeType);
       //imgHtml.src = UrlifyImage(new Blob([el.data], {type: el.mimeType}) );
     });
+  };
 
+  // Async delete image from MongoDB.
+  const deleteImage = async (imageId) => {
+    const response = await fetch(`${GATEWAY}/main/profile/delete-image/${imageId}`, {
+      method: 'POST',
+      cache: 'no-cache',
+      body: null
+    });
+
+    if (response.status === 200) {
+      // Hide the image locally since we deleted it in the DB.
+      document.getElementById(imageId).classList.add('hide');
+      document.getElementById(`btn-delete-image-${imageId}`).classList.add('hide');
+    }
+  };
+
+
+  // Main initialization
+  function init() {
+    fetchContactImages();
+    addEventListeners();
   }
   init();
 
@@ -509,9 +535,10 @@ import { Gateway, buildPostRequest, ConvertBase64ToImage } from './shared.js';
   //
   window._profileFns = {
     deleteActivity,
-    editActivity, 
-    cancelEdit, 
-    saveEdit, 
-    displayNewUploadImg
+    editActivity,
+    cancelEdit,
+    saveEdit,
+    displayNewUploadImg,
+    deleteImage
   };
 })();

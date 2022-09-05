@@ -31,8 +31,6 @@ exports.getProfileImages = (req, res, next) => {
 // Uploads an image to MongoDB.
 exports.uploadImage = async (req, res, next) => {
   try {
-    logger.plog("Inside of uploadImage()");
-
     const image = new Image();
   
     const isUploadSuccess = image.saveImageDetails(req.file, req.body);
@@ -54,6 +52,40 @@ exports.uploadImage = async (req, res, next) => {
   catch(err) { errHelper.redirect500(res, err); }
 }
 
+// Deletes an image in MongoDB for a given user.
+exports.deleteImage = async (req, res, next) => {
+  try {
+    const imageId = req.params.imageId;
+
+    logger.log("Need to do a security check here. Check src for comments.");
+    // Contact
+    //   .findById(profileId)
+    //   .select('_id, images')
+    //   .populate({ path: 'images', model: 'Image' })
+    //   .then(result => {
+    //     // DEV-NOTE: Security. Do a check to make sure that this
+    //     // image to be deleted belongs to the user (not contact).
+    //     logger.log("Need to do a security check here. Check src for comments.");
+    //   })
+
+    const imageResult = await Image.findById(imageId);
+    const contactId = imageResult.contactId.toString();
+
+    // Remove image from Contact document.
+    await Image.findByIdAndDelete(imageId);
+
+    // Remove image from Images document.
+    await Contact.findByIdAndUpdate(contactId, {
+      $pull: { images: imageId }
+    });
+
+    logger.plog("Deleted image: " + imageId);
+
+    res.status(200);
+    res.send('Ok');
+  }
+  catch (err) { errHelper.redirect500(res, err); }
+}
 
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------

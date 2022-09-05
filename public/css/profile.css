@@ -22,13 +22,17 @@ section {
   display: flex;
   flex-flow: wrap;
   /* justify-content: space-around; */
+  align-items: flex-start;
   padding: 1rem;
   overflow: auto;
   min-height: 5rem;
 }
 
-.image-carousel > img {
+.image-carousel > img,
+.image-carousel > div > img {
+  display: block;
   max-height: 25rem;
+  max-width: 55rem;
   margin: 0.8rem;
 }
 
@@ -36,7 +40,8 @@ section {
   padding: 2rem;
   border: 1px solid black;
   border-radius: 8px;
-  max-width: 12rem;
+  max-width: 12rem !important;
+  max-height: 10rem !important;
 }
 
 .image__add-image:hover {
@@ -48,6 +53,27 @@ section {
   position: relative;
   top: 1px;
   left: 1px;
+}
+
+.btn-delete-image {
+  position: relative;
+  border-radius: 8px;
+  border: 1px solid black;
+  z-index: 1;
+  float: right;
+  right: 20px;
+  top: 0.6rem;
+  background-color: rgb(230, 20, 20);
+  color: white;
+}
+.btn-delete-image:hover {
+  background-color: rgb(250, 20, 20);
+  color: white;
+}
+.btn-delete-image:active {
+  background-color: rgb(185, 20, 20);
+  color: white;
+  font-weight: bold;
 }
 
 .profile-content {
@@ -180,7 +206,8 @@ textarea.new-activity {
   display: block;
 }
 
-.dropdown-menu--item:hover, .dropdown-menu--item:focus { 
+.dropdown-menu--item:hover, 
+.dropdown-menu--item:focus { 
   background-color: #1154a1;
   color: white;
 }

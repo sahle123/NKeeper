@@ -279,7 +279,7 @@ input:focus {
 }
 
 .hide {
-  display: none;
+  display: none !important;
 }
 
 .form-control {
