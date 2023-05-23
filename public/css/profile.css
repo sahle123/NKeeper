@@ -69,6 +69,7 @@ section {
 .btn-delete-image:hover {
   background-color: rgb(250, 20, 20);
   color: white;
+  cursor: pointer;
 }
 .btn-delete-image:active {
   background-color: rgb(185, 20, 20);

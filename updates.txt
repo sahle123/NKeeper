@@ -1,3 +1,7 @@
-1. Add loading screen overlay while waiting for page to refresh.
+QoL: 
+    * Add a button the scrolls past all the images to the text section.
+    * Add loading screen overlay while waiting for page to refresh.
 
-2. QoL: Add a button the scrolls past all the images to the text section.
+Features:
+    * Promises kept section.
+    * IOUs section (incoming and outgoing).

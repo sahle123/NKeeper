@@ -11,7 +11,8 @@ import { Gateway, buildPostRequest, ConvertBase64ToImage } from './shared.js';
   // State of various elements within the page.
   const STATE = {
     editPage: false,
-    addActivity: false
+    addActivity: false,
+    addImage: false
   };
 
   const GATEWAY = Gateway;
@@ -307,7 +308,7 @@ import { Gateway, buildPostRequest, ConvertBase64ToImage } from './shared.js';
     const response = await fetch(`${GATEWAY}/main/profile`, request);
 
     // Upload image
-    if (hiddenImgUpload.files.length > 0) {
+    if ((hiddenImgUpload.files.length > 0) && (STATE.addImage)) {
       const imgUpload = hiddenImgUpload.files[0];
       const imgData = new FormData();
       imgData.append('img', imgUpload);
@@ -490,6 +491,7 @@ import { Gateway, buildPostRequest, ConvertBase64ToImage } from './shared.js';
   const displayNewUploadImg = (e) => {
     const addImageIcon = document.getElementById(_btnList.addNewImage);
     addImageIcon.src = URL.createObjectURL(e.target.files[0]);
+    STATE.addImage = true;
   };
 
   // Called on page init.
@@ -505,6 +507,11 @@ import { Gateway, buildPostRequest, ConvertBase64ToImage } from './shared.js';
       imgHtml.src = ConvertBase64ToImage(el.data, el.mimeType);
       //imgHtml.src = UrlifyImage(new Blob([el.data], {type: el.mimeType}) );
     });
+
+    // Remove any cached data in the files
+    // const hiddenImgUpload = document.getElementById(_btnList.hiddenImgUpload);
+    // const deleteCacheImgs = [...hiddenImgUpload.files];
+    // deleteCacheImgs.splice(1,1);
   };
 
   // Async delete image from MongoDB.

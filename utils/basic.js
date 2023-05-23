@@ -15,8 +15,19 @@ module.exports = class Basic {
 
   // Writes so object to a JSON file.
   static writeToFile = (path, obj) => {
-  fs.writeFile(path, JSON.stringify(obj), (err) => {
-    if (err) logger.logError(err);
-  });
+    fs.writeFile(path, JSON.stringify(obj), (err) => {
+      if (err) logger.logError(err);
+    });
+  }
+  
+  // Extracts connect-flash error message or sets string to null.
+  static getFlashErrorMsg(str) {
+    if (str.length > 0) { 
+        str = str[0]; 
+    }
+    else { 
+        str = null; 
+    }
+    return str;
 }
 }
