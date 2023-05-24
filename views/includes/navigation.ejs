@@ -7,7 +7,19 @@
       <li class="main-header__item"><a href="/main/profile">TEST PROFILE</a></li>
     </ul>
   </nav>
-  <div class="main-header__logo">
-    NKeeper LOGO
+  <div class="main-header__rhs">
+    <ul class="main-header__item-list">
+      <% if (!isAuthenticated) { %>
+      <li class="main-header__item"><a href="/signup">Sign-up</a></li>
+      <li class="main-header__item"><a href="/login">Login</a></li>
+      <% } else { %>
+      <li class="main-header__item">
+        <form action="/logout" method="post">
+          <%# Add anti-CSRF tokens here %>
+          <button type="submit">Logout</button>
+        </form>
+      </li>
+      <% } %>
+    </ul>
   </div>
 </header>

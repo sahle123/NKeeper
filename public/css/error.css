@@ -3,3 +3,18 @@
   justify-content: space-around;
   padding: 6rem 1rem;
 }
+
+.user-message {
+  margin: auto;
+  width: 90%;
+  border: 1px solid rgb(71, 113, 250);
+  background: rgb(202, 213, 250);
+  padding: 1rem;
+  border-radius: 3px;
+  text-align: center;
+}
+
+.user-message--error {
+  border-color: red;
+  background: rgb(255, 162, 162);
+}

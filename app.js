@@ -7,18 +7,19 @@ const cors = require('cors');
 const mongooseConnect = require('./utils/database').mongooseConnect;
 const MongoDBStore = require('connect-mongodb-session')(session); // For lightweight session storage in MongoDB.
 const connectFlash = require('connect-flash'); // Handy package for error messages.
-
 const app = express();
 
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
-// CONSTS
+// CONSTS AND MODELS
 const PORT = 3000;
 const MONGODB_URI = require('./utils/database').MONGODB_URI;
 const corsPolicy = cors({
   origin: ['https://www.google.com/'],
   methods: ['GET']
 });
+
+const User = require('./models/user');
 
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
@@ -65,7 +66,7 @@ app.use(session({
   resave: false,
   saveUninitialized: false,
   store: seshStorage,
-  cookie: { /* cookies can be configured here as neededd */ }
+  cookie: { maxAge: (3600000 * 3) } // i.e. 3 hours in milliseconds.
 }));
 
 // Add connect-flash functionality to app.
@@ -81,7 +82,8 @@ app.use((req, res, next) => {
   }
 
   // User is logged in.
-  User.findById(req.session.user._id)
+  User
+    .findById(req.session.user._id)
     .then(user => {
       req.user = user; // This will give us the Mongoose model that lets use use mongoose methods.
       next();

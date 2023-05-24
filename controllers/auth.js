@@ -14,9 +14,15 @@ exports.getLogin = (req, res, next) => {
     pageTitle: 'Login',
     errorMessage: basic.getFlashErrorMsg(req.flash('error'))
   })
-}
+};
 
 // GET Signup
+exports.getSignup = (req, res, next) => {
+  res.render('auth/signup', {
+    pageTitle: 'Sign-up',
+    errorMessage: basic.getFlashErrorMsg(req.flash('error'))
+  });
+};
 
 // POST Login
 exports.postLogin = (req, res, next) => {
@@ -58,14 +64,74 @@ exports.postLogin = (req, res, next) => {
       }
     })
     .catch(err => logger.logError(err));
-}
+};
 
 // POST Signup
+exports.postSignup = (req, res, next) => {
+  const email = req.body.email;
+  const password = req.body.password;
+  const confirmPassword = req.body.confirmPassword;
+
+  // DEV-NOTE: (SAA-DEV) Add email validator here.
+  if(!email) {
+    req.flash('error', 'Invalid email provided.');
+    return res.redirect('/signup');
+  }
+
+  // Password validation.
+  if(password !== confirmPassword) {
+    req.flash('error', 'Passwords are mismatched. Please retype them again');
+    return res.redirect('/signup');
+  }
+
+  // Check if user already exists.
+  User
+    .findOne({
+      email: email
+    })
+    .then(userDoc => {
+      // User already exists.
+      if(userDoc) {
+        req.flash('error', 'Email already exists. Please choose another email address.');
+        logger.logError(`This user (${email}) already exists!`);
+        return res.redirect('/signup');
+      }
+
+      // Otherwise, create the new user.
+      // Hash password async. 12 rounds of hashing.
+      return bcrypt
+        .hash(password, 12)
+        .then(hashedPassword => {
+          // Create new user
+          const newSignup = new User({
+            email: email,
+            password: hashedPassword,
+            username: "TEST USER"
+          });
+
+          return newSignup.save();
+        })
+        .then(result => {
+          logger.plog(`New user (${email}) successfully created!`);
+          res.redirect('/login');
+        })
+        .catch(err => { logger.logError(err); });
+    })
+    .catch(err => { logger.logError(err); });
+};
+
 // POST Logout
+exports.postLogout = (req, res, next) => {
+  // This 'destroy' method is provided by express's session library.
+  req.session.destroy(err => {
+    if(err) { logger.logError(err); }
+    res.redirect('/login');
+  })
+};
 
 
 // DRY code for login errors.
 const loginError = (res, msg) => {
   logger.logError(msg);
   res.redirect('/login');
-}
+};
