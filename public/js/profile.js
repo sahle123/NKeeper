@@ -25,7 +25,7 @@ import { Gateway, buildPostRequest, ConvertBase64ToImage } from './shared.js';
 
   // All IDs on the profile page that are not dynamic.
   const _idList = {
-    userId: 'userId',
+    contactId: 'contactId',
     firstName: 'first-name',
     middleName: 'middle-name',
     lastName: 'last-name',
@@ -277,7 +277,7 @@ import { Gateway, buildPostRequest, ConvertBase64ToImage } from './shared.js';
 
   // Posts all changes to MongoDB.
   const postChanges = async (idList) => {
-    const userId = document.getElementById(idList.userId);
+    const contactId = document.getElementById(idList.contactId);
     const firstName = document.getElementById(idList.firstName);
     const middleName = document.getElementById(idList.middleName);
     const lastName = document.getElementById(idList.lastName);
@@ -291,7 +291,7 @@ import { Gateway, buildPostRequest, ConvertBase64ToImage } from './shared.js';
     const hiddenImgUpload = document.getElementById(_btnList.hiddenImgUpload);
 
     const rawBody = {
-      userId: userId.value,
+      contactId: contactId.value,
       firstName: firstName.innerHTML.trim(),
       middleName: middleName.innerHTML.trim(),
       lastName: lastName.innerHTML.trim(),
@@ -312,7 +312,7 @@ import { Gateway, buildPostRequest, ConvertBase64ToImage } from './shared.js';
       const imgUpload = hiddenImgUpload.files[0];
       const imgData = new FormData();
       imgData.append('img', imgUpload);
-      imgData.append('contactId', userId.value);
+      imgData.append('contactId', contactId.value);
 
       const imgUploadResponse = await fetch(`${GATEWAY}/main/profile/upload-image`, {
         method: "POST",
@@ -375,12 +375,12 @@ import { Gateway, buildPostRequest, ConvertBase64ToImage } from './shared.js';
 
   // Posts new activity to MongoDB.
   const postActivity = async (idList) => {
-    const userId = document.getElementById(idList.userId);
+    const contactId = document.getElementById(idList.contactId);
     const activityDesc = document.getElementById(idList.newActivityDesc);
     const activityDate = document.getElementById(idList.newActivityDate);
 
     const rawBody = {
-      userId: userId.value,
+      contactId: contactId.value,
       desc: activityDesc.value,
       date: activityDate.value
     };
@@ -457,11 +457,11 @@ import { Gateway, buildPostRequest, ConvertBase64ToImage } from './shared.js';
 
   // Posts edited activity to MongoDB.
   const saveEdit = async (activityId) => {
-    const userId = document.getElementById(_idList.userId);
+    const contactId = document.getElementById(_idList.contactId);
     const editedActivity = document.getElementById(activityId + "-edit-desc");
 
     const rawBody = {
-      userId: userId.value,
+      contactId: contactId.value,
       activityId: activityId,
       desc: editedActivity.value,
       date: null
@@ -497,7 +497,7 @@ import { Gateway, buildPostRequest, ConvertBase64ToImage } from './shared.js';
   // Called on page init.
   // Fetches all images tied to this contact.
   const fetchContactImages = async () => {
-    const contactId = document.getElementById(_idList.userId).value;
+    const contactId = document.getElementById(_idList.contactId).value;
     const response = await fetch(`${GATEWAY}/main/profile/get-images/${contactId}`);
     const responseContent = await response.json();
     console.log(responseContent);

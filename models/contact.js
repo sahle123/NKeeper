@@ -13,6 +13,7 @@ const Schema = mongoose.Schema;
 //-----------------------------------------------------------------------------
 // Schema
 const contactSchema = new Schema({
+  userId: { type: Schema.Types.ObjectId, required: true, ref: 'User' },
   firstName: { type: String, required: true },
   middleName: { type: String, required: false },
   lastName: { type: String, required: true },

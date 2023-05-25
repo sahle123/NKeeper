@@ -28,7 +28,7 @@ import {Gateway, buildPostRequest, DateTimeSettings } from './shared.js';
       const activityDate = new Date(responseContent.date)
         .toLocaleDateString(DateTimeSettings.scheme, DateTimeSettings.options);
 
-      htmlInjection = `<h5>${responseContent.userId.firstName} ${responseContent.userId.lastName}</h5>
+      htmlInjection = `<h5>${responseContent.contactId.firstName} ${responseContent.contactId.lastName}</h5>
       <p>${activityDate}</p>
       <hr/>
       <p>${responseContent.desc}</p>`;

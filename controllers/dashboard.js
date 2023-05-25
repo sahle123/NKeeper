@@ -19,11 +19,14 @@ exports.getDashboardPage = (req, res, next) => {
 //
 // Gets most recent activity w/ the contact's details
 exports.getMostRecentActivity = (req, res, next) => {
+
+  // DEV-NOTE: This code needs to be refactored completely.
   Activity
     .findOne({}, {}, { sort: { 'date': -1 } })
-    .populate({ path: 'userId', model: 'Contact' })
+    .populate({ path: 'contactId', model: 'Contact' })
     .then(result => {
       if (result) {
+        console.log(result);
         res.status(200);
         res.send(result);
       }
@@ -38,7 +41,7 @@ exports.getMostRecentActivity = (req, res, next) => {
 // Gets number of contacts in total
 exports.getNumOfContacts = (req, res, next) => {
   Contact
-    .find({})
+    .find({ userId: req.session.user._id })
     .then(result => {
       const mappedObj = new Map(Object.entries(result));
       res.status(200);

@@ -33,7 +33,7 @@ exports.uploadImage = async (req, res, next) => {
   try {
     const image = new Image();
   
-    const isUploadSuccess = image.saveImageDetails(req.file, req.body);
+    const isUploadSuccess = image.saveImageDetails(req.file, req.body.contactId, req.session.user._id);
   
     if (isUploadSuccess) {
       

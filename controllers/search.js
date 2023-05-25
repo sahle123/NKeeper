@@ -25,6 +25,7 @@ exports.searchContacts = (req, res, next) => {
 
   Contact
     .find({
+      userId: req.session.user._id,
       firstName: { "$regex": firstName, "$options": 'i' },
       middleName: { "$regex": middleName, "$options": 'i' },
       lastName: { "$regex": lastName, "$options": 'i' }

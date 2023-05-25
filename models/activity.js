@@ -11,7 +11,8 @@ const Schema = mongoose.Schema;
 //-----------------------------------------------------------------------------
 // Schema
 const activitySchema = new Schema({
-  userId: { type: Schema.Types.ObjectId, required: true },
+  contactId: { type: Schema.Types.ObjectId, required: true, ref: 'Contact' },
+  userId: { type: Schema.Types.ObjectId, required: true, ref: 'User' },
   desc: { type: String, required: true },
   date: { type: Date, required: true }
 });

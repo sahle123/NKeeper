@@ -5,13 +5,14 @@
 const express = require('express');
 
 const searchController = require('../controllers/search');
+const isAuth = require('../middleware/is-auth');
 
 const router = express.Router();
 
 // GET /
-router.get('/', searchController.getSearchPage);
+router.get('/', isAuth, searchController.getSearchPage);
 
 // POST /
-router.post('/', searchController.searchContacts);
+router.post('/', isAuth, searchController.searchContacts);
 
 module.exports = router;

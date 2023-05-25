@@ -38,7 +38,7 @@ exports.getProfile = (req, res, next) => {
 exports.getProfileById = (req, res, next) => {
   const profileId = req.params.profileId;
   Contact
-    .findById(profileId)
+    .findOne( { _id: profileId, userId: req.session.user_id })
     .populate({ path: 'activities', model: 'Activity' })
     .populate({ path: 'images', model: 'Image' })
     .sort({ date: 1 })
@@ -91,7 +91,8 @@ exports.addActivity = async (req, res, next) => {
     const activityDate = req.body.date ? req.body.date : Date.now();
 
     const activity = new Activity({
-      userId: req.body.userId,
+      contactId: req.body.contactId,
+      userId: req.session.user._id,
       desc: req.body.desc,
       date: new Date(activityDate)
     });
@@ -230,17 +231,17 @@ function add_temp_data_mongo() {
 
   const activities = [
     new Activity({
-      userId: contact._id,
+      contactId: contact._id,
       desc: 'We went to the movies',
       date: new Date(2016, 2, 21)
     }),
     new Activity({
-      userId: contact._id,
+      contactId: contact._id,
       desc: 'Mary\'s Halloween party',
       date: new Date(2017, 10, 31)
     }),
     new Activity({
-      userId: contact._id,
+      contactId: contact._id,
       desc: "Super stupidly long entry about how our times together we spend as friends is a metaphor for the... I don't know where this is going, but I intend to make this entry unnecessary and spacious, much like social media. God, I hate social media. It exists to take up as much space as possible and waste our time. I have a dream to live in a world where TikTok is a cardinal sin and excessive posting on Snapchat is a federal crime.",
       date: new Date(2018, 1, 15)
     }),

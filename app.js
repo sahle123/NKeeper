@@ -9,10 +9,12 @@ const MongoDBStore = require('connect-mongodb-session')(session); // For lightwe
 const connectFlash = require('connect-flash'); // Handy package for error messages.
 const app = express();
 
+
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 // CONSTS AND MODELS
 const PORT = 3000;
+const SESSION_SECRET = 'Always a beginner'; // DEV-NOTE: (SAA-DEV) this needs to be changed before prod.
 const MONGODB_URI = require('./utils/database').MONGODB_URI;
 const corsPolicy = cors({
   origin: ['https://www.google.com/'],
@@ -20,6 +22,7 @@ const corsPolicy = cors({
 });
 
 const User = require('./models/user');
+
 
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
@@ -32,7 +35,6 @@ const seshStorage = new MongoDBStore({
 
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
-
 //
 // Express app config
 app.set('view engine', 'ejs');
@@ -62,7 +64,7 @@ app.use(express.static(path.join(__dirname, "public")));
 //
 // Session management middleware
 app.use(session({
-  secret: 'always a beginner', // DEV-NOTE: (SAA-DEV) this needs to be changed before prod.
+  secret: SESSION_SECRET, 
   resave: false,
   saveUninitialized: false,
   store: seshStorage,

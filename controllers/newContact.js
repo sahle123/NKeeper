@@ -18,6 +18,7 @@ exports.postNewContact = (req, res, next) => {
   // DEV-NOTE: Add server-side validators here.
 
   const contact = new Contact({
+    userId: req.session.user._id,
     firstName: req.body.firstName,
     middleName: req.body.middleName,
     lastName: req.body.lastName,
