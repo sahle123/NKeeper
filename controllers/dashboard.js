@@ -20,19 +20,19 @@ exports.getDashboardPage = (req, res, next) => {
 // Gets most recent activity w/ the contact's details
 exports.getMostRecentActivity = (req, res, next) => {
 
-  // DEV-NOTE: This code needs to be refactored completely.
   Activity
-    .findOne({}, {}, { sort: { 'date': -1 } })
+    .findOne({ userId: req.session.user._id }, {}, { sort: { 'date': -1 } })
     .populate({ path: 'contactId', model: 'Contact' })
     .then(result => {
       if (result) {
-        console.log(result);
+        //console.log(result);
         res.status(200);
         res.send(result);
       }
       else {
         res.status(500);
-        res.send("Error fetching data...");
+        logger.logError("Could not find any \'Most Recent Activity\' for user " + req.session.user._id);
+        res.send(errHelper.jsonErrorMsg("Nobody found."));
       }
     })
     .catch(err => { errHelper.redirect500(res, err); });
@@ -55,6 +55,7 @@ exports.getNumOfContacts = (req, res, next) => {
 exports.getFriendWithMostActivities = (req, res, next) => {
   Contact
     .aggregate([
+      { $match: { userId: req.session.user._id } },
       {
         $project: {
           activities: 1,
@@ -77,13 +78,15 @@ exports.getFriendWithMostActivities = (req, res, next) => {
       }
     ])
     .then(result => {
-      if (result) {
+      if (result && (result.length > 0)) {
         const contact = result.sort((a, b) => (a.count < b.count) ? 1 : -1);
         res.status(200);
         res.send(contact[0]);
       }
       else {
-        throw "No contacts returned...";
+        res.status(500);
+        logger.logError("Could not find any \'Most Recent Activity With Friend\' for user " + req.session.user._id);
+        res.send(errHelper.jsonErrorMsg("No activities found."));
       }
     })
     .catch(err => { errHelper.redirect500(res, err); });

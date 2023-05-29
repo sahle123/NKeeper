@@ -34,7 +34,7 @@ import {Gateway, buildPostRequest, DateTimeSettings } from './shared.js';
       <p>${responseContent.desc}</p>`;
     }
     else {
-      htmlInjection = `<p>${responseContent}</p>`;
+      htmlInjection = `<p>${responseContent.errorMsg}</p>`;
     }
 
     const anchor = document.getElementById(_idList.mostRecentActivity);
@@ -52,7 +52,7 @@ import {Gateway, buildPostRequest, DateTimeSettings } from './shared.js';
       htmlInjection = `<h5>${responseContent}</h5>`;
     }
     else {
-      htmlInjection = `<p>${responseContent}</p>`;
+      htmlInjection = `<p>${responseContent.errorMsg}</p>`;
     }
 
     const anchor = document.getElementById(_idList.numOfContacts);
@@ -71,7 +71,7 @@ import {Gateway, buildPostRequest, DateTimeSettings } from './shared.js';
       <p>Count: ${responseContent.count}</p>`;
     }
     else {
-      htmlInjection = `<p>${responseContent}</p>`;
+      htmlInjection = `<p>${responseContent.errorMsg}</p>`;
     }
 
     const anchor = document.getElementById(_idList.friendMostActivities);

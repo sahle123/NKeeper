@@ -6,6 +6,12 @@
 const logger = require('./logger');
 
 
+// Generic frontend error message. This 
+// should be expanded later.
+exports.jsonErrorMsg = (errMsg) => {
+  return `{ "errorMsg": "${errMsg}" }`;
+}
+
 //
 // 4xx
 exports.redirect400 = (res, errMsg) => {
