@@ -38,14 +38,12 @@ exports.getProfile = (req, res, next) => {
 exports.getProfileById = (req, res, next) => {
   const profileId = req.params.profileId;
   Contact
-    .findOne( { _id: profileId, userId: req.session.user_id })
+    .findOne({ _id: profileId, userId: req.session.user._id })
     .populate({ path: 'activities', model: 'Activity' })
     .populate({ path: 'images', model: 'Image' })
     .sort({ date: 1 })
     .then(result => {
-
-      // Sort activities DESC
-      result.activities.sort((a, b) => { return dateTimeDesc(a, b); });
+      if(!result) { throw new Error('Could not fetch contact data'); }
 
       res.render('main/profile', {
         prop: result,
@@ -60,14 +58,13 @@ exports.getProfileById = (req, res, next) => {
 // Updates profile
 // DEV-NOTE: Needs text sanitizers
 exports.updateProfile = (req, res, next) => {
-
   Contact
-    .findById(req.body.userId)
+    .findOne({ _id: req.body.contactId, userId: req.session.user._id})
     .then(contact => {
       contact.firstName = req.body.firstName;
       contact.middleName = req.body.middleName;
       contact.lastName = req.body.lastName;
-      contact.dob = req.body.dob;
+      //contact.dob = req.body.dob;
       contact.summary = req.body.summary;
       contact.contactInfo.mobile = req.body.phone;
       contact.contactInfo.email = req.body.email;
@@ -98,7 +95,7 @@ exports.addActivity = async (req, res, next) => {
     });
 
     const activityResult = await activity.save();
-    const contactResult = await Contact.findById(activityResult.userId);
+    const contactResult = await Contact.findOne({ _id: activityResult.contactId, userId: req.session.user._id });
 
     contactResult.activities.push(activityResult._id);
     await contactResult.save();
@@ -116,14 +113,14 @@ exports.deleteActivity = async (req, res, next) => {
   try {
     const activityId = req.body.activityId;
 
-    const activityResult = await Activity.findById(activityId);
-    const userId = activityResult.userId.toString();
+    const activityResult = await Activity.findOne({ _id: activityId, userId: req.session.user._id });
+    const contactId = activityResult.contactId.toString();
 
     // Remove activity from Activities document.
     await Activity.findByIdAndDelete(activityId);
 
     // Remove activity ID from Contacts document.
-    await Contact.findByIdAndUpdate(userId, {
+    await Contact.findByIdAndUpdate(contactId, {
       // https://www.mongodb.com/docs/manual/reference/operator/update/pull/#-pull
       $pull: { activities: activityId }
     });
@@ -139,9 +136,9 @@ exports.deleteActivity = async (req, res, next) => {
 // DEV-NOTE: Needs text saniitizers
 exports.editActivity = async (req, res, next) => {
   try {
-    const activityResult = await Activity.findById(req.body.activityId);
+    const activityResult = await Activity.findOne({ _id: req.body.activityId, userId: req.session.user._id });
 
-    if (String(activityResult.userId) === String(req.body.userId)) {
+    if (String(activityResult.contactId) === String(req.body.contactId)) {
       activityResult.desc = req.body.desc;
       // activity date is not changeable for now.
       await activityResult.save();
@@ -184,6 +181,9 @@ const getLastActivityDate = (contact) => {
 // Calculates age based on passed in date string.
 // Kudos: https://stackoverflow.com/a/7091965/6369752
 const getAge = (dateString) => {
+  if(!dateString) { return 'Unknown'; }
+  else if (String(dateString) == String(new Date(0))) { return 'Unknown'; }
+
   const today = new Date();
   const birthDate = new Date(dateString);
   let age = today.getFullYear() - birthDate.getFullYear();

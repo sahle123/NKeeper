@@ -16,6 +16,14 @@ exports.getNewContact = (req, res, next) => {
 exports.postNewContact = (req, res, next) => {
 
   // DEV-NOTE: Add server-side validators here.
+  // Checking date
+  let dateOfBirth = 0;
+  if(req.body.dob) {
+    dateOfBirth = new Date(req.body.dob);
+  }
+  else {
+    dateOfBirth = new Date(0);
+  }
 
   const contact = new Contact({
     userId: req.session.user._id,
@@ -23,7 +31,7 @@ exports.postNewContact = (req, res, next) => {
     middleName: req.body.middleName,
     lastName: req.body.lastName,
     summary: req.body.summary,
-    dob: new Date(req.body.dob),
+    dob: dateOfBirth,
     contactInfo: {
       mobile: req.body.phone,
       email: req.body.email,

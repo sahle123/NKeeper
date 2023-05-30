@@ -52,7 +52,11 @@
         <div class="card flex-container">
           <h4 class="card__title">Attributes</h4>
           <p class="card__subtitle">Date of birth
-            <p class="card__item" id="dob-content"><%= prop.dob.toLocaleDateString('fr-CA', {year: 'numeric', month: 'numeric', day: 'numeric' }) %></p>
+            <% if (String(prop.dob) == String(new Date(0))) { %>
+              <p class="card__item" id="dob-content">Unknown</p>
+            <% } else { %>
+              <p class="card__item" id="dob-content"><%= prop.dob.toLocaleDateString('fr-CA', {year: 'numeric', month: 'numeric', day: 'numeric' }) %></p>
+            <% } %>
           </p>
           <p class="card__subtitle">Age
             <p class="card__item"><%= age %></p>
