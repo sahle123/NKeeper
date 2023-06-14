@@ -4,13 +4,19 @@
 
 const logger = require('../utils/logger');
 const errHelper = require('../utils/errorHelper');
+const basic = require('../utils/basic');
+const toast = require('../utils/enums').toastMessageTypes;
 
 const Contact = require('../models/contact');
 const Activity = require('../models/activity');
 
 exports.getDashboardPage = (req, res, next) => {
+  const toastMsg = basic.getFlashMsg(req.flash(toast.info))
+  logger.plog("getDashboardPage --> " + toastMsg);
+
   res.render('dashboard/index', {
-    pageTitle: 'Dashboard'
+    pageTitle: 'Dashboard',
+    infoMessage: toastMsg
   });
 };
 
@@ -21,11 +27,10 @@ exports.getDashboardPage = (req, res, next) => {
 exports.getMostRecentActivity = (req, res, next) => {
 
   Activity
-    .findOne({ userId: req.session.user._id }, {}, { sort: { 'date': -1 } })
+    .findOne({ userId: req.session.user._id, isActive: true }, {}, { sort: { 'date': -1 } })
     .populate({ path: 'contactId', model: 'Contact' })
     .then(result => {
-      if (result) {
-        //console.log(result);
+      if (result.contactId.isActive) {
         res.status(200);
         res.send(result);
       }
@@ -41,7 +46,7 @@ exports.getMostRecentActivity = (req, res, next) => {
 // Gets number of contacts in total
 exports.getNumOfContacts = (req, res, next) => {
   Contact
-    .find({ userId: req.session.user._id })
+    .find({ userId: req.session.user._id, isActive: true })
     .then(result => {
       const mappedObj = new Map(Object.entries(result));
       res.status(200);
@@ -55,7 +60,7 @@ exports.getNumOfContacts = (req, res, next) => {
 exports.getFriendWithMostActivities = (req, res, next) => {
   Contact
     .aggregate([
-      { $match: { userId: req.session.user._id } },
+      { $match: { userId: req.session.user._id, isActive: true } },
       {
         $project: {
           activities: 1,

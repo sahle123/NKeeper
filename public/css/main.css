@@ -153,6 +153,29 @@ main.padded {
   left: 1px;
 }
 
+.btn--danger { 
+  font: inherit;
+  border: 1px solid #1154a1;
+  color: black;
+  background: #fd5e5e;
+  border-radius: 3px;
+  cursor: pointer;
+  padding: 0.5rem 1rem;
+}
+
+.btn--danger:hover {
+  background-color: #ff1515;
+  color: white;  
+}
+
+.btn--danger:active {
+  background-color: #ff7070;
+  box-shadow: 1px 1px 2px black;
+  position: relative;
+  top: 1px;
+  left: 1px;
+}
+
 .btn--dropdown {
   font: inherit;
   border: 0;

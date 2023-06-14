@@ -3,6 +3,7 @@
 */
 const logger = require('../utils/logger');
 const errHelper = require('../utils/errorHelper');
+const toast = require('../utils/enums').toastMessageTypes;
 
 const Contact = require('../models/contact');
 const Activity = require('../models/activity');
@@ -37,8 +38,13 @@ exports.getProfile = (req, res, next) => {
 // Fetches a profile by its ID
 exports.getProfileById = (req, res, next) => {
   const profileId = req.params.profileId;
+
+  // DEBUG CODE
+  logger.plog("getProfileById --> " + profileId);
+  // DEBUG CODE
+
   Contact
-    .findOne({ _id: profileId, userId: req.session.user._id })
+    .findOne({ _id: profileId, userId: req.session.user._id, isActive: true })
     .populate({ path: 'activities', model: 'Activity' })
     .populate({ path: 'images', model: 'Image' })
     .sort({ date: 1 })
@@ -59,7 +65,7 @@ exports.getProfileById = (req, res, next) => {
 // DEV-NOTE: Needs text sanitizers
 exports.updateProfile = (req, res, next) => {
   Contact
-    .findOne({ _id: req.body.contactId, userId: req.session.user._id})
+    .findOne({ _id: req.body.contactId, userId: req.session.user._id, isActive: true })
     .then(contact => {
       contact.firstName = req.body.firstName;
       contact.middleName = req.body.middleName;
@@ -79,6 +85,29 @@ exports.updateProfile = (req, res, next) => {
   logger.plog("Called update profile!");
 };
 
+// Sets a contact to inactive. 
+// Manual deletion will be handled by the DB admin.
+exports.deleteProfile = async (req, res, next) => {
+  try {
+    const profileId = req.body.contactId;
+
+    const subject = await Contact
+      .findOne({ _id: profileId, userId: req.session.user._id, isActive: true });
+
+    if(subject) {
+      subject.isActive = false;
+      await subject.save();
+      req.flash(toast.info, "User deleted successfully");
+    }
+    else {
+      req.flash(toast.error, "Could not delete user");
+    }
+
+    res.redirect('/dashboard');
+  }
+  catch (err) { errHelper.redirect500(res, err); }
+};
+
 // Adds activity for some contact.
 // DEV-NOTE: Needs text sanitizers
 exports.addActivity = async (req, res, next) => {
@@ -95,7 +124,8 @@ exports.addActivity = async (req, res, next) => {
     });
 
     const activityResult = await activity.save();
-    const contactResult = await Contact.findOne({ _id: activityResult.contactId, userId: req.session.user._id });
+    const contactResult = await Contact
+      .findOne({ _id: activityResult.contactId, userId: req.session.user._id, isActive: true });
 
     contactResult.activities.push(activityResult._id);
     await contactResult.save();
@@ -113,7 +143,8 @@ exports.deleteActivity = async (req, res, next) => {
   try {
     const activityId = req.body.activityId;
 
-    const activityResult = await Activity.findOne({ _id: activityId, userId: req.session.user._id });
+    const activityResult = await Activity
+      .findOne({ _id: activityId, userId: req.session.user._id, isActive: true });
     const contactId = activityResult.contactId.toString();
 
     // Remove activity from Activities document.
@@ -136,7 +167,8 @@ exports.deleteActivity = async (req, res, next) => {
 // DEV-NOTE: Needs text saniitizers
 exports.editActivity = async (req, res, next) => {
   try {
-    const activityResult = await Activity.findOne({ _id: req.body.activityId, userId: req.session.user._id });
+    const activityResult = await Activity
+      .findOne({ _id: req.body.activityId, userId: req.session.user._id, isActive: true });
 
     if (String(activityResult.contactId) === String(req.body.contactId)) {
       activityResult.desc = req.body.desc;

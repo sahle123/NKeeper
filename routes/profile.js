@@ -23,6 +23,9 @@ router.get('/profile/:profileId', isAuth, profileController.getProfileById);
 // POST /profile
 router.post('/profile', isAuth, profileController.updateProfile);
 
+// POST /profile/delete
+router.post('/profile/delete', isAuth, profileController.deleteProfile);
+
 // POST /profile/add-activity
 router.post('/profile/add-activity', isAuth, profileController.addActivity);
 

@@ -20,8 +20,8 @@ module.exports = class Basic {
     });
   }
   
-  // Extracts connect-flash error message or sets string to null.
-  static getFlashErrorMsg(str) {
+  // Extracts connect-flash message or sets string to null.
+  static getFlashMsg(str) {
     if (str.length > 0) { 
         str = str[0]; 
     }

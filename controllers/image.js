@@ -12,7 +12,7 @@ const Contact = require('../models/contact');
 exports.getProfileImages = (req, res, next) => {
   const profileId = req.params.profileId;
   Contact
-    .findById(profileId)
+    .findOne({ userId: req.session.user._id, _id: profileId, isActive: true })
     .select('_id, images')
     .populate({ path: 'images', model: 'Image' })
     .then(result => {

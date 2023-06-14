@@ -17,7 +17,8 @@ const imageSchema = new Schema({
   userId: { type: Schema.Types.ObjectId, required: true, ref: 'User' },
   data: { type: String, required: true },
   fileExtension: { type: String, required: true },
-  mimeType: { type: String, required: true }
+  mimeType: { type: String, required: true },
+  isActive: { type: Boolean, required: true, default: true }
 });
 
 

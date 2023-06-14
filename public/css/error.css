@@ -14,6 +14,11 @@
   text-align: center;
 }
 
+.user-message--info {
+  border-color: rgb(0, 195, 255);
+  background: rgb(162, 202, 255);
+}
+
 .user-message--error {
   border-color: red;
   background: rgb(255, 162, 162);

@@ -27,7 +27,8 @@ const contactSchema = new Schema({
     livingIn: { type: String, required: false }
   },
   activities: [{ type: Schema.Types.ObjectId, required: false }],
-  images: [{ type: Schema.Types.ObjectId, required: false }]
+  images: [{ type: Schema.Types.ObjectId, required: false }],
+  isActive: { type: Boolean, required: true, default: true }
 });
 
 

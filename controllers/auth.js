@@ -7,12 +7,13 @@ const User = require('../models/user');
 // Utils
 const logger = require('../utils/logger');
 const basic = require('../utils/basic');
+const toast = require('../utils/enums').toastMessageTypes;
 
 // GET Login
 exports.getLogin = (req, res, next) => {
   res.render('auth/login', {
     pageTitle: 'Login',
-    errorMessage: basic.getFlashErrorMsg(req.flash('error'))
+    errorMessage: basic.getFlashMsg(req.flash(toast.error))
   })
 };
 
@@ -20,7 +21,7 @@ exports.getLogin = (req, res, next) => {
 exports.getSignup = (req, res, next) => {
   res.render('auth/signup', {
     pageTitle: 'Sign-up',
-    errorMessage: basic.getFlashErrorMsg(req.flash('error'))
+    errorMessage: basic.getFlashMsg(req.flash(toast.error))
   });
 };
 
@@ -30,7 +31,7 @@ exports.postLogin = (req, res, next) => {
   const password = req.body.password;
 
   User
-    .findOne({ email: email })
+    .findOne({ email: email, isActive: true })
     .then(user => {
 
       // User exists
@@ -43,15 +44,23 @@ exports.postLogin = (req, res, next) => {
             if(isMatch) {
               req.session.isLoggedIn = true;
               req.session.user = user;
+              user.loginAttempts = 0;
+              user.save();
+              
               // Not always needed, but in scenarios where latency can affect the result, this is a good idea to call.
               // i.e. res.redirect() will run regardless if the session data was finished writing to MongoDB or not.
               return req.session.save((err) => {
                 if(err) { logger.logError(err); }
+
+                //req.flash(toast.info, "Logged in successfully");
                 res.redirect('/dashboard');
               });
             }
             // Mismatched password
             else {
+              user.loginAttempts += 1;
+              user.save();
+
               req.flash('error', "Invalid email or password.");
               loginError(res, "Email/Password combo wrong or user doesn't exist.");
             }

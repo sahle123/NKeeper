@@ -14,7 +14,8 @@ const activitySchema = new Schema({
   contactId: { type: Schema.Types.ObjectId, required: true, ref: 'Contact' },
   userId: { type: Schema.Types.ObjectId, required: true, ref: 'User' },
   desc: { type: String, required: true },
-  date: { type: Date, required: true }
+  date: { type: Date, required: true },
+  isActive: { type: Boolean, required: true, default: true }
 });
 
 

@@ -51,7 +51,8 @@ import { Gateway, buildPostRequest, ConvertBase64ToImage } from './shared.js';
     submitEdit: 'btn-submit-edit',
     cancelEdit: 'btn-cancel-edit',
     addNewImage: 'btn-add-new-image',
-    hiddenImgUpload: 'hidden-upload-image'
+    hiddenImgUpload: 'hidden-upload-image',
+    deleteContactBtn: 'btn-delete-contact'
   };
 
 
@@ -63,6 +64,9 @@ import { Gateway, buildPostRequest, ConvertBase64ToImage } from './shared.js';
 
     const editBtn = document.getElementById(_btnList.editBtn);
     editBtn.onclick = () => { toggleEditModeState(_idList, _btnList); }
+
+    const deleteProfileBtn = document.getElementById(_btnList.deleteContactBtn);
+    deleteProfileBtn.onclick = () => { deleteContactProfile(_btnList); }
 
     const toggleActivityBtn = document.getElementById(_btnList.toggleActivity);
     toggleActivityBtn.onclick = () => { toggleAddActivity(_idList, _btnList); }
@@ -83,6 +87,7 @@ import { Gateway, buildPostRequest, ConvertBase64ToImage } from './shared.js';
   const toggleEditModeState = (idList, btnList) => {
     STATE.editPage = !STATE.editPage;
     const editBtn = document.getElementById(btnList.editBtn);
+    const deleteContactBtn = document.getElementById(btnList.deleteContactBtn);
     const summary = document.getElementById(idList.summary);
     const email = document.getElementById(idList.emailContent);
     const phone = document.getElementById(idList.phoneContent);
@@ -104,6 +109,10 @@ import { Gateway, buildPostRequest, ConvertBase64ToImage } from './shared.js';
       editBtn.innerHTML = "Save Changes";
       editBtn.classList.remove("btn")
       editBtn.classList.add("btn--caution");
+
+      //
+      // Delete button
+      deleteContactBtn.classList.remove("hide");
 
       //
       // Header section
@@ -231,6 +240,10 @@ import { Gateway, buildPostRequest, ConvertBase64ToImage } from './shared.js';
       editBtn.classList.add("btn");
 
       //
+      // Delete button
+      deleteContactBtn.classList.add("hide");
+
+      //
       // Header section
       const inputFirstName = document.getElementById('first-name-input');
       firstName.innerHTML = inputFirstName.value;
@@ -274,6 +287,21 @@ import { Gateway, buildPostRequest, ConvertBase64ToImage } from './shared.js';
       postChanges(idList);
     }
   };
+
+  const deleteContactProfile = async (btnList) => {
+    const rawBody = {
+      contactId: contactId.value,
+    };
+    const request = buildPostRequest(rawBody);
+
+    // DEV-NOTE: This needs to be done w/ XHR otherwise it will 
+    // run async and reload twice. We don't want this since we
+    // will lose the connect-flash message.
+    const response = await fetch(`${GATEWAY}/main/profile/delete`, request);
+
+    // So the user cannot go back. Otherwise, same as .href
+    location.replace(response.url)
+  }
 
   // Posts all changes to MongoDB.
   const postChanges = async (idList) => {

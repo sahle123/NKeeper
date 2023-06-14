@@ -79,7 +79,7 @@ import {Gateway, buildPostRequest, DateTimeSettings } from './shared.js';
   }
 
   function init() {
-
+    
     // Running all actions we need loaded on the page.
     getMostRecentActivity();
     getNumOfContacts();
